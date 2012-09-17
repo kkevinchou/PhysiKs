@@ -21,11 +21,11 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
-import entities.MovingEntity;
+import entities.TargettedMovingEntity;
 
 public class Game {
 	private EntityManager entityManager;
-	private MovingEntity guy;
+	private TargettedMovingEntity guy;
 	private final float FPS = 60;
 	private final float SECONDS_TO_MILLISEC_RATE = 1000;
 	private final int screenWidth = 800;
@@ -40,7 +40,7 @@ public class Game {
 		}
 	}
 	
-	public void init() throws LWJGLException {
+	private void init() throws LWJGLException {
 		Display.setDisplayMode(new DisplayMode(800,600));
         Display.setTitle("LUMBER DUDES!");
         Display.create();
@@ -50,11 +50,11 @@ public class Game {
         glMatrixMode(GL_MODELVIEW);
 		
 		entityManager = EntityManager.getInstance();
-		guy = new MovingEntity(0, 0, 25, 25);
+		guy = new TargettedMovingEntity(0, 0, 25, 25);
 		entityManager.add(guy);
 	}
 	
-	public void gameLoop() throws InterruptedException {
+	private void gameLoop() throws InterruptedException {
 		float milliSecPerFrame = 1 / FPS * SECONDS_TO_MILLISEC_RATE;
 		long startTick;
 		long elapsedTick;
@@ -97,14 +97,8 @@ public class Game {
 	private void render() {
 		glClear(GL_COLOR_BUFFER_BIT);
 		
-		GL11.glColor3f(0.8f, 0.8f, 0.8f);
-		glBegin(GL_QUADS);
-			GL11.glVertex2f(0, 0);
-			GL11.glVertex2f(screenWidth, 0);
-			GL11.glVertex2f(screenWidth, screenHeight);
-			GL11.glVertex2f(0, screenHeight);
-		glEnd();
-	
+		renderBackground();
+		
 		GL11.glColor3f(0f, 1f, 0f);
 		glBegin(GL_QUADS);
 			GL11.glVertex2f(guy.getX(), guy.getY());
@@ -114,5 +108,15 @@ public class Game {
 		glEnd();
 		
 		Display.update();
+	}
+	
+	private void renderBackground() {
+		GL11.glColor3f(0.8f, 0.8f, 0.8f);
+		glBegin(GL_QUADS);
+			GL11.glVertex2f(0, 0);
+			GL11.glVertex2f(screenWidth, 0);
+			GL11.glVertex2f(screenWidth, screenHeight);
+			GL11.glVertex2f(0, screenHeight);
+		glEnd();
 	}
 }

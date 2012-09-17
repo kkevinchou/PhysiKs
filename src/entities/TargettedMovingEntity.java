@@ -2,15 +2,15 @@ package entities;
 
 import kgeometry.V2D;
 
-public class MovingEntity extends Entity {
+public class TargettedMovingEntity extends Entity {
 	private V2D target;
 	private float speed = 300; // pixels per frame
 	
-	public MovingEntity(float x, float y, float width, float height) {
+	public TargettedMovingEntity(float x, float y, float width, float height) {
 		super(x, y, width, height);
 	}
 	
-	public MovingEntity() {
+	public TargettedMovingEntity() {
 		this(0, 0, 0, 0);
 	}
 
