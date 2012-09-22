@@ -1,18 +1,16 @@
 package bits.entity;
 
-import bits.component.*;
-
-public class Entity {
+public abstract class Entity {
 	private float x;
 	private float y;
+	private float width;
+	private float height;
 	
-	public Entity() {
-		this.x = 100;
-		this.y = 100;
-	}
-	
-	public void update() {
-		
+	protected Entity(float x, float y, float width, float height) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
 	}
 
 	public float getX() {
@@ -29,5 +27,21 @@ public class Entity {
 
 	public void setY(float y) {
 		this.y = y;
+	}
+	
+	public float getWidth() {
+		return width;
+	}
+
+	public void setWidth(float width) {
+		this.width = width;
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
+	public void setHeight(float height) {
+		this.height = height;
 	}
 }
