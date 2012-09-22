@@ -11,7 +11,7 @@ public class Bit extends Entity {
 		visualComponent = new VisualComponent(this);
 	}
 	
-	public void update(float dt) {
+	public void update(long dt) {
 		visualComponent.update();
 	}
 }

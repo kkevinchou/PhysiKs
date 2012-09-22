@@ -12,10 +12,14 @@ public class Game {
 	
 	private void runGame() {
 		Director director = new Director();
+		DeltaTracker deltaTracker = new DeltaTracker();
+		long delta = 0;
 		
+		deltaTracker.init();
 		while (!Display.isCloseRequested()) {
+			delta = deltaTracker.getDelta();
 			clearScreen();
-			director.update(0);
+			director.update(delta);
 			renderScreen();
 		}
 
@@ -44,6 +48,7 @@ public class Game {
 	private void clearScreen() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		
+		// Draw white background
 		GL11.glColor3f(1f, 1f, 1f);
 		GL11.glPushMatrix();
 			GL11.glBegin(GL11.GL_QUADS);
