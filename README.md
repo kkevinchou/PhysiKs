@@ -4,5 +4,4 @@ This will be the repo for my experimentation with steering behaviors as well as 
 
 Things to do:
 ====
-* Finish Painter to get something basic on the screen
 * Wander behavior
