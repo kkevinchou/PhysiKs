@@ -5,8 +5,6 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
-import bits.entity.*;
-
 public class Game {
 	public static final int FPS = 60;
 	public static final int width = 800;
