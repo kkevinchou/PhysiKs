@@ -1,11 +1,10 @@
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Circle;
-import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 
@@ -19,63 +18,80 @@ public class BitsGame extends BasicGame {
 	public static int WIDTH = 800;
 	public static int HEIGHT = 600;
 	
-	Bit b;
-	float rotation;
+	Bit bit;
 	
 	public BitsGame(String title) {
 		super(title);
 	}
 
 	public void init(GameContainer gc) throws SlickException {
-		b = new Bit(300, 300, 30, 30);
-		rotation = 0;
+		bit = new Bit(300, 300, 30, 30);
 	}
-
-	public void render(GameContainer gc, Graphics g) throws SlickException {
-		Vector2D heading = b.getHeading();
-		// may need to multiply by -1 to account for inverted axis
-		float baseRotation = (float) (Math.PI / 2);
-		float rotationAdjustment = (float)(Math.PI - Math.atan(heading.getY() / heading.getX()));
-		
-		float rotation = baseRotation;
-		if (heading.getX() > 0) {
-			rotation = baseRotation - rotationAdjustment;
-		} else {
-			rotation = baseRotation + rotationAdjustment;
-		}
-		
-		Vector2D center = b.getPosition();
-		Transform rotationTransform = Transform.createRotateTransform((float)Math.toRadians(-rotation++), center.getX(), center.getY());
-		Shape sprite = new Rectangle(b.getX(), b.getY(), b.getWidth(), b.getHeight());
-		sprite = sprite.transform(rotationTransform);
-		g.draw(sprite);
-		
+	
+	private void renderWanderTarget(Graphics g) {
 		Vector2D wanderTarget = (Vector2D)Debug.getInstance().getData("wanderTarget");
 		if (wanderTarget != null) {
 			g.draw(new Circle(wanderTarget.getX(), wanderTarget.getY(), 3));
 		}
-		
-		Vector2D circle = (Vector2D)Debug.getInstance().getData("wanderCircle");
+	}
+	
+	private void renderWanderCircle(Graphics g) {
+		Vector2D WanderCircle = (Vector2D)Debug.getInstance().getData("wanderCircle");
 		float wanderRadius = (float)Debug.getInstance().getData("wanderRadius");
-		if (circle != null && wanderRadius > 0) {
-			g.draw(new Circle(circle.getX(), circle.getY(), wanderRadius));
+		if (WanderCircle != null) {
+			g.draw(new Circle(WanderCircle.getX(), WanderCircle.getY(), wanderRadius));
 		}
+	}
+	
+	private void renderBit(Bit bit, Graphics g) {
+		Polygon p = new Polygon();
+		p.addPoint(bit.getX() + bit.getWidth() / 2, bit.getY());
+		p.addPoint(bit.getX(), bit.getY() + bit.getHeight());
+		p.addPoint(bit.getX() + bit.getWidth(), bit.getY() + bit.getHeight());
+		p.setClosed(true);
+		
+		Shape sprite = p;
+		Vector2D heading = bit.getHeading();
+		
+		float slope = heading.getY() / heading.getX();
+		float rotation = (float)(Math.atan(slope));
+
+		if (rotation > 0) {
+			rotation += Math.PI;
+		}
+		
+		if (heading.getY() > 0) {
+			rotation += Math.PI;
+		}
+		
+		rotation += (Math.PI / 2);
+		
+		Vector2D center = bit.getPosition();
+		Transform rotationTransform = Transform.createRotateTransform(rotation, center.getX(), center.getY());
+		sprite = sprite.transform(rotationTransform);
+		
+		g.draw(sprite);
+		
+		renderWanderTarget(g);
+		renderWanderCircle(g);
+	}
+
+	public void render(GameContainer gc, Graphics g) throws SlickException {
+		g.setAntiAlias(true);
+		renderBit(bit, g);
 	}
 
 	public void update(GameContainer gc, int delta) throws SlickException {
-		b.update(delta);
+		bit.update(delta);
 		
-		if (b.getX() < 0) {
-			b.setX(WIDTH);
+		bit.setX(bit.getX() % WIDTH);
+		bit.setY(bit.getY() % HEIGHT);
+		
+		if (bit.getX() + bit.getWidth() < 0) {
+			bit.setX(WIDTH);
 		}
-		if (b.getX() > WIDTH) {
-			b.setX(0);
-		}
-		if (b.getY() < 0) {
-			b.setY(HEIGHT);
-		}
-		if (b.getY() > HEIGHT){
-			b.setY(0);
+		if (bit.getY() + bit.getHeight() < 0) {
+			bit.setY(HEIGHT);
 		}
 	}
 
