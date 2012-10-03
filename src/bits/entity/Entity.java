@@ -1,10 +1,15 @@
 package bits.entity;
 
+import bits.game.IntGenerator;
+
 public abstract class Entity {
 	private float x;
 	private float y;
 	private float width;
 	private float height;
+	private final int id = intGenerator.nextInt();
+	
+	private static final IntGenerator intGenerator  = new IntGenerator();
 	
 	protected Entity(float x, float y, float width, float height) {
 		this.x = x;
@@ -12,7 +17,11 @@ public abstract class Entity {
 		this.width = width;
 		this.height = height;
 	}
-
+	
+	public int getId() {
+		return id;
+	}
+	
 	public float getX() {
 		return x;
 	}

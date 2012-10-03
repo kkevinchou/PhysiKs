@@ -20,9 +20,9 @@ public class Wander {
 		
 		Debug.getInstance().setData("wanderRadius", wanderRadius);
 		
-		// Initialize wander angle to be directly in front
-		wanderAngle = (float)(3 * Math.PI / 2);
-		wanderStrength = 300;
+		// Initialize wander angle to be directly North
+		wanderAngle = (float)(-Math.PI / 2);
+		wanderStrength = 400;
 	}
 	
 	public Vector2D calculateSteeringAccel(Vector2D position, Vector2D heading) {

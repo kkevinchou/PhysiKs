@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -18,14 +21,20 @@ public class BitsGame extends BasicGame {
 	public static int WIDTH = 800;
 	public static int HEIGHT = 600;
 	
-	Bit bit;
+	List<Bit> bits;
 	
 	public BitsGame(String title) {
 		super(title);
 	}
 
 	public void init(GameContainer gc) throws SlickException {
-		bit = new Bit(300, 300, 30, 30);
+		bits = new ArrayList<Bit>();
+		bits.add(new Bit(300, 300, 30, 30));
+		bits.add(new Bit(300, 300, 30, 30));
+		bits.add(new Bit(300, 300, 30, 30));
+		bits.add(new Bit(300, 300, 30, 30));
+		bits.add(new Bit(300, 300, 30, 30));
+		bits.add(new Bit(300, 300, 30, 30));
 	}
 	
 	private void renderWanderTarget(Graphics g) {
@@ -72,26 +81,30 @@ public class BitsGame extends BasicGame {
 		
 		g.draw(sprite);
 		
-		renderWanderTarget(g);
-		renderWanderCircle(g);
+//		renderWanderTarget(g);
+//		renderWanderCircle(g);
 	}
 
 	public void render(GameContainer gc, Graphics g) throws SlickException {
 		g.setAntiAlias(true);
-		renderBit(bit, g);
+		for (Bit bit : bits) {
+			renderBit(bit, g);
+		}
 	}
 
 	public void update(GameContainer gc, int delta) throws SlickException {
-		bit.update(delta);
-		
-		bit.setX(bit.getX() % WIDTH);
-		bit.setY(bit.getY() % HEIGHT);
-		
-		if (bit.getX() + bit.getWidth() < 0) {
-			bit.setX(WIDTH);
-		}
-		if (bit.getY() + bit.getHeight() < 0) {
-			bit.setY(HEIGHT);
+		for (Bit bit : bits) {
+			bit.update(delta);
+			
+			bit.setX(bit.getX() % WIDTH);
+			bit.setY(bit.getY() % HEIGHT);
+			
+			if (bit.getX() + bit.getWidth() < 0) {
+				bit.setX(WIDTH);
+			}
+			if (bit.getY() + bit.getHeight() < 0) {
+				bit.setY(HEIGHT);
+			}
 		}
 	}
 
