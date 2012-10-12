@@ -5,24 +5,30 @@ import java.util.List;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Circle;
 
+import physiks.PhysiKsSim;
+
 import util.Util;
 
-import entities.Entity;
+import entities.RigidBody;
 import geometry.Vector2D;
 
 public class RenderEngine {
-	private List<Entity> entities;
+	private List<RigidBody> entities;
 	
-	public RenderEngine(List<Entity> entities) {
-		this.entities = entities;
+	public RenderEngine(List<RigidBody> rigidBodies) {
+		this.entities = rigidBodies;
+	}
+	
+	private void drawBody(RigidBody r, Graphics graphics) {
+		Vector2D position = r.getPosition();
+		float radius = r.getRadius();
+		
+		graphics.draw(new Circle(position.getX(), PhysiKsSim.HEIGHT - position.getY(), radius));
 	}
 	
 	public void update(Graphics graphics) {
-		for (Entity entity : entities) {
-			Vector2D position = entity.getPosition();
-			float radius = entity.getRadius();
-			
-			graphics.draw(new Circle(position.getX(), position.getY(), radius));
+		for (RigidBody body : entities) {
+			drawBody(body, graphics);
 		}
 	}
 }
