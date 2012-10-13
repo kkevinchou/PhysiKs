@@ -44,7 +44,7 @@ public class PhysicsEngine {
 					
 					Vector2D impulseVector = collisionNormal.mult(impulse);
 					body.setVelocity(body.getVelocity().add(impulseVector.div(body.getMass())));
-					target.setVelocity(body.getVelocity().sub(impulseVector.div(target.getMass())));
+					target.setVelocity(target.getVelocity().sub(impulseVector.div(target.getMass())));
 				}
 			}
 		}
