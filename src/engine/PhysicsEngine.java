@@ -2,6 +2,9 @@ package engine;
 
 import java.util.List;
 
+import collision.CollisionChecker;
+import collision.CollisionResult;
+import collision.SatResult;
 import collision.SeparatingAxisTest;
 
 
@@ -33,7 +36,7 @@ public class PhysicsEngine {
 			body.clearForces();
 //			body.addForce(new Gravity(body));
 			if (body.getId() == 0) {
-				body.addForce(new Poke(new Vector2D(1, -1), 2000));
+//				body.addForce(new Poke(new Vector2D(1, -1), 2000));
 			}
 			
 			Vector2D netForce = body.calculateNetForce();
@@ -42,13 +45,12 @@ public class PhysicsEngine {
 			
 			for (RigidBody target : entities) {
 				if (body.getId() == target.getId()) continue;
-				Vector2D separatingAxis = SeparatingAxisTest.findSeparatingAxis(body, target);
-				if (separatingAxis == null) {
-					body.setPosition(previousPosition);
-					body.setVelocity(previousVelocity);
+				CollisionResult collisionResult = CollisionChecker.check(body, target);
+				if (collisionResult.hasCollision()) {
+					Vector2D separatingVector = collisionResult.getMinimumSeparatingVector();
+					body.setPosition(body.getPosition().add(separatingVector));
 					
-					separatingAxis = SeparatingAxisTest.findSeparatingAxis(body, target);
-					Vector2D collisionNormal = separatingAxis.perpendicular().normalize();
+					Vector2D collisionNormal = collisionResult.getCollisionNormal();
 
 					Vector2D bVelocityAlongNormal = collisionNormal.mult(body.getVelocity().dot(collisionNormal));
 					Vector2D tVelocityAlongNormal = collisionNormal.mult(-target.getVelocity().dot(collisionNormal));
@@ -63,9 +65,5 @@ public class PhysicsEngine {
 				}
 			}
 		}
-	}
-	
-	private boolean collidesWith(RigidBody a, RigidBody b) {
-		return false;
 	}
 }
