@@ -51,6 +51,10 @@ public final class Vector2D {
 		return (x * v.getX()) + (y * v.getY());
 	}
 	
+	public float normalizedProjection(Vector2D v) {
+		return dot(v.normalize());
+	}
+	
 	public String toString() {
 		return "[Vector2D X: " + this.x + " Y: " + this.y + "]";
 	}

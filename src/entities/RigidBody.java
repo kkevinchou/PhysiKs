@@ -7,28 +7,24 @@ import forces.Force;
 import geometry.Vector2D;
 import util.IntGenerator;
 
-public class RigidBody {
+public abstract class RigidBody {
+	private float mass;
 	private Vector2D position;
 	private Vector2D velocity;
 	private Vector2D acceleration;
 	
 	private List<Force> forces;
 	
-	private float mass;
-	private float radius;
-	
 	private final int id = intGenerator.nextInt();
 	private static final IntGenerator intGenerator  = new IntGenerator();
 	
-	public RigidBody(float x, float y, float mass, float radius) {
+	public RigidBody(float x, float y, float mass) {
+		this.mass = mass;
 		position = new Vector2D(x, y);
 		velocity = new Vector2D(0, 0);
 		acceleration = new Vector2D(0, 0);
 		
 		forces = new ArrayList<Force>();
-		
-		this.mass = mass;
-		this.radius = radius;
 	}
 	
 	public int getId() {
@@ -61,10 +57,6 @@ public class RigidBody {
 	
 	public float getMass() {
 		return mass;
-	}
-	
-	public float getRadius() {
-		return radius;
 	}
 	
 	public void addForce(Force f) {

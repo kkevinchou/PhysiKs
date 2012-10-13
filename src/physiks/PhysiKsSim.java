@@ -11,6 +11,7 @@ import org.newdawn.slick.SlickException;
 
 import engine.PhysicsEngine;
 import engine.RenderEngine;
+import entities.PolyBody;
 import entities.RigidBody;
 import forces.Gravity;
 import geometry.Vector2D;
@@ -32,11 +33,14 @@ public class PhysiKsSim extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		entities = new ArrayList<RigidBody>();
 		
-		RigidBody body1 = new RigidBody(100, 300, 25, 20);
+		List<Vector2D> points = new ArrayList<Vector2D>();
+		points.add(new Vector2D(0, 0));
+		points.add(new Vector2D(20, 0));
+		points.add(new Vector2D(10, 20));
+		
+		RigidBody body1 = new PolyBody(100, 300, 25, points);
 		body1.setVelocity(new Vector2D(100, 0));
-		RigidBody body2 = new RigidBody(400, 300, 50, 20);
 		entities.add(body1);
-		entities.add(body2);
 
 		physEngine = new PhysicsEngine(entities);
 		renderEngine = new RenderEngine(entities);

@@ -4,12 +4,13 @@ import java.util.List;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.Polygon;
 
 import physiks.PhysiKsSim;
 
 import util.Util;
 
-import entities.RigidBody;
+import entities.*;
 import geometry.Vector2D;
 
 public class RenderEngine {
@@ -20,10 +21,20 @@ public class RenderEngine {
 	}
 	
 	private void drawBody(RigidBody r, Graphics graphics) {
-		Vector2D position = r.getPosition();
-		float radius = r.getRadius();
+		Polygon sprite = new Polygon();
 		
-		graphics.draw(new Circle(position.getX(), PhysiKsSim.HEIGHT - position.getY(), radius));
+		if (r instanceof PolyBody) {
+			PolyBody body = (PolyBody)r;
+			Vector2D position = r.getPosition();
+			for (Vector2D point : body.getPoints()) {
+				float x = point.getX() + position.getX();
+				float y = point.getY() + position.getY();
+				sprite.addPoint(x, y);
+			}
+			sprite.setClosed(true);
+		}
+		
+		graphics.draw(sprite);
 	}
 	
 	public void update(Graphics graphics) {

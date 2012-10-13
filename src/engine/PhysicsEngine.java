@@ -32,21 +32,21 @@ public class PhysicsEngine {
 			Vector2D acceleration = netForce.div(body.getMass());
 			body.setAcceleration(acceleration);
 				
-			for (RigidBody target : entities) {
-				if (body.getId() == target.getId()) continue;
-				CollisionResult collisionResult = CollisionChecker.check(body, target);
-				if (collisionResult.hasCollision()) {
-					Vector2D separatingVector = collisionResult.getMinimumSeparatingVector();
-					body.setPosition(body.getPosition().add(separatingVector));
-					
-					Vector2D collisionNormal = collisionResult.getCollisionNormal();
-					float impulse = calculateImpulseMagnitude(body, target, collisionNormal);
-					
-					Vector2D impulseVector = collisionNormal.mult(impulse);
-					body.setVelocity(body.getVelocity().add(impulseVector.div(body.getMass())));
-					target.setVelocity(target.getVelocity().sub(impulseVector.div(target.getMass())));
-				}
-			}
+//			for (RigidBody target : entities) {
+//				if (body.getId() == target.getId()) continue;
+//				CollisionResult collisionResult = CollisionChecker.check(body, target);
+//				if (collisionResult.hasCollision()) {
+//					Vector2D separatingVector = collisionResult.getMinimumSeparatingVector();
+//					body.setPosition(body.getPosition().add(separatingVector));
+//					
+//					Vector2D collisionNormal = collisionResult.getCollisionNormal();
+//					float impulse = calculateImpulseMagnitude(body, target, collisionNormal);
+//					
+//					Vector2D impulseVector = collisionNormal.mult(impulse);
+//					body.setVelocity(body.getVelocity().add(impulseVector.div(body.getMass())));
+//					target.setVelocity(target.getVelocity().sub(impulseVector.div(target.getMass())));
+//				}
+//			}
 		}
 	}
 	
