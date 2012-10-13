@@ -15,34 +15,23 @@ import geometry.Vector2D;
 public class PhysicsEngine {
 	private List<RigidBody> entities;
 	private List<Force> forces;
+	private static final float coefficientOfRestitution = 1;
 	
 	public PhysicsEngine(List<RigidBody> entities) {
 		this.entities = entities;
 	}
 	
 	public void update(int delta) {
-		Vector2D previousPosition;
-		Vector2D previousVelocity;
-		
 		float deltaInSeconds = (float)delta/1000;
 		
 		for (RigidBody body : entities) {
-			previousPosition = body.getPosition();
-			previousVelocity = body.getVelocity();
-			
-			body.setPosition(previousPosition.add(body.getVelocity().mult(deltaInSeconds)));
-			body.setVelocity(previousVelocity.add(body.getAcceleration().mult(deltaInSeconds)));
-
-			body.clearForces();
-//			body.addForce(new Gravity(body));
-			if (body.getId() == 0) {
-//				body.addForce(new Poke(new Vector2D(1, -1), 2000));
-			}
+			body.setPosition(body.getPosition().add(body.getVelocity().mult(deltaInSeconds)));
+			body.setVelocity(body.getVelocity().add(body.getAcceleration().mult(deltaInSeconds)));
 			
 			Vector2D netForce = body.calculateNetForce();
 			Vector2D acceleration = netForce.div(body.getMass());
 			body.setAcceleration(acceleration);
-			
+				
 			for (RigidBody target : entities) {
 				if (body.getId() == target.getId()) continue;
 				CollisionResult collisionResult = CollisionChecker.check(body, target);
@@ -51,19 +40,27 @@ public class PhysicsEngine {
 					body.setPosition(body.getPosition().add(separatingVector));
 					
 					Vector2D collisionNormal = collisionResult.getCollisionNormal();
-
-					Vector2D bVelocityAlongNormal = collisionNormal.mult(body.getVelocity().dot(collisionNormal));
-					Vector2D tVelocityAlongNormal = collisionNormal.mult(-target.getVelocity().dot(collisionNormal));
+					float impulse = calculateImpulseMagnitude(body, target, collisionNormal);
 					
-					body.setVelocity(body.getVelocity().sub(bVelocityAlongNormal));
-					target.setVelocity(target.getVelocity().sub(tVelocityAlongNormal));
-					
-					float closingVelocity = bVelocityAlongNormal.sub(tVelocityAlongNormal).magnitude();
-					
-					Vector2D impulseVelocity = collisionNormal.mult(closingVelocity * (body.getMass() / (body.getMass() + target.getMass())));
-					body.setVelocity(body.getVelocity().add(impulseVelocity));
+					Vector2D impulseVector = collisionNormal.mult(impulse);
+					body.setVelocity(body.getVelocity().add(impulseVector.div(body.getMass())));
+					target.setVelocity(body.getVelocity().sub(impulseVector.div(target.getMass())));
 				}
 			}
 		}
+	}
+	
+	private float calculateImpulseMagnitude(RigidBody body1, RigidBody body2, Vector2D collisionNormal) {
+		// Formula: http://chrishecker.com/images/e/e7/Gdmphys3.pdf
+		
+		Vector2D closingVelocity = body1.getVelocity().sub(body2.getVelocity());
+		float combinedInverseMass = (1 / body1.getMass()) + (1 / body2.getMass());
+		
+		float impulse = -(1 + PhysicsEngine.coefficientOfRestitution);
+		impulse = impulse * closingVelocity.dot(collisionNormal);
+		impulse = impulse / collisionNormal.dot(collisionNormal);
+		impulse = impulse / (combinedInverseMass);
+		
+		return impulse;
 	}
 }

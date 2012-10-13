@@ -32,7 +32,7 @@ public class PhysiKsSim extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		entities = new ArrayList<RigidBody>();
 		
-		RigidBody body1 = new RigidBody(300, 300, 100, 10);
+		RigidBody body1 = new RigidBody(100, 300, 50, 5);
 		body1.setVelocity(new Vector2D(100, 0));
 		RigidBody body2 = new RigidBody(400, 300, 100, 10);
 		entities.add(body1);
