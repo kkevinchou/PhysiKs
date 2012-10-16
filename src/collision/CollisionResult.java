@@ -2,7 +2,7 @@ package collision;
 
 import geometry.Vector2D;
 
-public class CollisionResult {
+public final class CollisionResult {
 	private Vector2D minimumSeparatingVector;
 	private Vector2D collisionNormal;
 	
@@ -19,11 +19,11 @@ public class CollisionResult {
 		return minimumSeparatingVector;
 	}
 
-	public void setMinimumSeparatingVector(Vector2D minimumSeparatingVector) {
+	public  void setMinimumSeparatingVector(Vector2D minimumSeparatingVector) {
 		this.minimumSeparatingVector = minimumSeparatingVector;
 	}
 
-	public Vector2D getCollisionNormal() {
+	public final Vector2D getCollisionNormal() {
 		return collisionNormal;
 	}
 

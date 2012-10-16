@@ -7,7 +7,7 @@ public abstract class CollisionChecker {
 	public static CollisionResult check(RigidBody body1, RigidBody body2) {
 		CollisionResult result = new CollisionResult();
 		
-		SatResult satResult = SeparatingAxisTest.findSeparatingAxis(body1, body2);
+		SatResult satResult = SeparatingAxisTest.getSatResult(body1, body2);
 		Vector2D minimumSeparatingVector = satResult.getMinimumSeparatingVector();
 		result.setMinimumSeparatingVector(minimumSeparatingVector);
 		

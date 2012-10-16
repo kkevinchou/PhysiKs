@@ -11,6 +11,6 @@ public class Gravity implements Force {
 	}
 
 	public Vector2D calculateForce() {
-		return new Vector2D(0, owner.getMass() * -98);
+		return new Vector2D(0, owner.getMass() * 150);
 	}
 }

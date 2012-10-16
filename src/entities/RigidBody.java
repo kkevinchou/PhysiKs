@@ -36,7 +36,7 @@ public abstract class RigidBody {
 	}
 
 	public void setPosition(final Vector2D position) {
-		this.position = position.copy();
+		this.position = position;
 	}
 	
 	public Vector2D getVelocity() {
@@ -44,7 +44,7 @@ public abstract class RigidBody {
 	}
 
 	public void setVelocity(Vector2D velocity) {
-		this.velocity = velocity.copy();
+		this.velocity = velocity;
 	}
 
 	public Vector2D getAcceleration() {
@@ -52,7 +52,7 @@ public abstract class RigidBody {
 	}
 
 	public void setAcceleration(Vector2D acceleration) {
-		this.acceleration = acceleration.copy();
+		this.acceleration = acceleration;
 	}
 	
 	public float getMass() {

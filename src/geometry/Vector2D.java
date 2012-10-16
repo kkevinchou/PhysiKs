@@ -1,8 +1,10 @@
 package geometry;
 
 public final class Vector2D {
-	private float x;
-	private float y;
+	private final float x;
+	private final float y;
+	
+	public static final Vector2D ZERO_VECTOR = new Vector2D(0, 0);
 	
 	public Vector2D() {
 		this(0, 0);
@@ -17,10 +19,6 @@ public final class Vector2D {
 	public Vector2D(double x, double y) {
 		this.x = (float)x;
 		this.y = (float)y;
-	}
-	
-	public static final Vector2D zeroVector() {
-		return new Vector2D(0, 0);
 	}
 	
 	public Vector2D copy() {
@@ -55,15 +53,28 @@ public final class Vector2D {
 		return dot(v.normalize());
 	}
 	
+	public boolean equals(Object o) {
+		if (!(o instanceof Vector2D)) {
+			return false;
+		}
+		
+		Vector2D vector = (Vector2D)o;
+		if ((x == vector.getX()) && (y == vector.getY())) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public String toString() {
 		return "[Vector2D X: " + this.x + " Y: " + this.y + "]";
 	}
 	
-	public final Vector2D add(final Vector2D vector) {
+	public final Vector2D add(Vector2D vector) {
 		return new Vector2D(this.x + vector.getX(), this.y + vector.getY());
 	}
 	
-	public final Vector2D sub(final Vector2D vector) {
+	public final Vector2D sub(Vector2D vector) {
 		return new Vector2D(this.x - vector.getX(), this.y - vector.getY());
 	}
 	

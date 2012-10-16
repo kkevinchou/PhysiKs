@@ -2,28 +2,20 @@ package collision;
 
 import geometry.Vector2D;
 
-public class SatResult {
-	private Vector2D separatingAxis;
-	private Vector2D minimumSeparatingVector;
+public final class SatResult {
+	private final Vector2D separatingAxis;
+	private final Vector2D minimumSeparatingVector;
 	
-	public SatResult() {
-		separatingAxis = null;
-		minimumSeparatingVector = null;
+	public SatResult(Vector2D separatingAxis, Vector2D minimumSeparatingVector) {
+		this.separatingAxis = separatingAxis;
+		this.minimumSeparatingVector = minimumSeparatingVector;
 	}
 
 	public Vector2D getSeparatingAxis() {
-		return separatingAxis.copy();
-	}
-
-	public void setSeparatingAxis(Vector2D separatingAxis) {
-		this.separatingAxis = separatingAxis;
+		return separatingAxis;
 	}
 
 	public Vector2D getMinimumSeparatingVector() {
 		return minimumSeparatingVector;
-	}
-
-	public void setMinimumSeparatingVector(Vector2D minimumSeparatingVector) {
-		this.minimumSeparatingVector = minimumSeparatingVector;
 	}
 }

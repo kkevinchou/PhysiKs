@@ -15,38 +15,48 @@ import geometry.Vector2D;
 public class PhysicsEngine {
 	private List<RigidBody> entities;
 	private List<Force> forces;
-	private static final float coefficientOfRestitution = 1;
+	private static final float coefficientOfRestitution = 0.7f;
 	
 	public PhysicsEngine(List<RigidBody> entities) {
 		this.entities = entities;
 	}
 	
 	public void update(int delta) {
+		delta = Math.min(16, delta);
+		
 		float deltaInSeconds = (float)delta/1000;
 		
 		for (RigidBody body : entities) {
 			body.setPosition(body.getPosition().add(body.getVelocity().mult(deltaInSeconds)));
 			body.setVelocity(body.getVelocity().add(body.getAcceleration().mult(deltaInSeconds)));
 			
+			body.clearForces();
+			
+			if (body.getMass() != Float.POSITIVE_INFINITY) {
+				body.addForce(new Gravity(body));
+			}
+			
 			Vector2D netForce = body.calculateNetForce();
 			Vector2D acceleration = netForce.div(body.getMass());
 			body.setAcceleration(acceleration);
 				
-//			for (RigidBody target : entities) {
-//				if (body.getId() == target.getId()) continue;
-//				CollisionResult collisionResult = CollisionChecker.check(body, target);
-//				if (collisionResult.hasCollision()) {
-//					Vector2D separatingVector = collisionResult.getMinimumSeparatingVector();
-//					body.setPosition(body.getPosition().add(separatingVector));
-//					
-//					Vector2D collisionNormal = collisionResult.getCollisionNormal();
-//					float impulse = calculateImpulseMagnitude(body, target, collisionNormal);
-//					
-//					Vector2D impulseVector = collisionNormal.mult(impulse);
-//					body.setVelocity(body.getVelocity().add(impulseVector.div(body.getMass())));
-//					target.setVelocity(target.getVelocity().sub(impulseVector.div(target.getMass())));
-//				}
-//			}
+			for (RigidBody target : entities) {
+				if (body.getId() == target.getId()) continue;
+				
+				SatResult satResult = SeparatingAxisTest.getSatResult(body, target);
+
+				Vector2D separatingVector = satResult.getMinimumSeparatingVector();
+				if (separatingVector != null) {
+					body.setPosition(body.getPosition().add(separatingVector));
+					
+					Vector2D collisionNormal = separatingVector.normalize();
+					float impulse = calculateImpulseMagnitude(body, target, collisionNormal);
+					
+					Vector2D impulseVector = collisionNormal.mult(impulse);
+					body.setVelocity(body.getVelocity().add(impulseVector.div(body.getMass())));
+					target.setVelocity(target.getVelocity().sub(impulseVector.div(target.getMass())));
+				}
+			}
 		}
 	}
 	

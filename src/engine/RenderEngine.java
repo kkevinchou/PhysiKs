@@ -27,8 +27,8 @@ public class RenderEngine {
 			PolyBody body = (PolyBody)r;
 			Vector2D position = r.getPosition();
 			for (Vector2D point : body.getPoints()) {
-				float x = point.getX() + position.getX();
-				float y = point.getY() + position.getY();
+				float x = point.getX();
+				float y = point.getY();
 				sprite.addPoint(x, y);
 			}
 			sprite.setClosed(true);

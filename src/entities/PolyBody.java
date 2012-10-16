@@ -13,7 +13,7 @@ public class PolyBody extends RigidBody {
 		super(x, y, mass);
 		normals = new ArrayList<Vector2D>();
 		this.points = new ArrayList<Vector2D>();
-		center = Vector2D.zeroVector();
+		center = Vector2D.ZERO_VECTOR;
 		
 		for (Vector2D point : points) {
 			center = center.add(point);
@@ -23,10 +23,10 @@ public class PolyBody extends RigidBody {
 		
 		for (int i = 0, size = points.size(); i < size; i++) {
 			Vector2D a = points.get(i);
-			Vector2D b = points.get(i % size);
+			Vector2D b = points.get((i + 1) % size);
 			
-			Vector2D normal = b.sub(a).perpendicular();
-			if (center.add(normal).normalizedProjection(a.sub(center)) > 0) {
+			Vector2D normal = b.sub(a).perpendicular().normalize();
+			if (normal.normalizedProjection(a.sub(center)) > 0) {
 				// Normal faces outward from center, add it to our normals list
 				normals.add(normal);
 			} else {
@@ -37,7 +37,22 @@ public class PolyBody extends RigidBody {
 	}
 	
 	public List<Vector2D> getPoints() {
-		return points;
+		if (getId() == 0) {
+			int a = 0;
+			a++;
+		}
+		
+		List<Vector2D> worldPoints = new ArrayList<Vector2D>();
+		Vector2D position = getPosition();
+		
+		for (Vector2D point : points) {
+			point = new Vector2D(position.getX() + point.getX(), position.getY() + point.getY());
+			worldPoints.add(point);
+		}
+		return worldPoints;
 	}
 
+	public final List<Vector2D> getNormals() {
+		return normals;
+	}
 }
