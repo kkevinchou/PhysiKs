@@ -27,7 +27,17 @@ public class PhysicsEngine {
 		float deltaInSeconds = (float)delta/1000;
 		
 		for (RigidBody body : entities) {
-			body.setPosition(body.getPosition().add(body.getVelocity().mult(deltaInSeconds)));
+			Vector2D velocity = body.getVelocity();
+			
+			if (Math.abs(velocity.getX()) < 0.01f) {
+				body.setVelocity(new Vector2D(0, velocity.getY()));
+			}
+			
+			if (Math.abs(velocity.getY()) < 0.01f) {
+				body.setVelocity(new Vector2D(velocity.getX(), 0));
+			}
+			
+			body.setPosition(body.getPosition().add(velocity.mult(deltaInSeconds)));
 			body.setVelocity(body.getVelocity().add(body.getAcceleration().mult(deltaInSeconds)));
 			
 			body.clearForces();
@@ -42,6 +52,7 @@ public class PhysicsEngine {
 				
 			for (RigidBody target : entities) {
 				if (body.getId() == target.getId()) continue;
+				if (body.getMass() == Float.POSITIVE_INFINITY) continue;
 				
 				SatResult satResult = SeparatingAxisTest.getSatResult(body, target);
 
@@ -55,6 +66,10 @@ public class PhysicsEngine {
 					Vector2D impulseVector = collisionNormal.mult(impulse);
 					body.setVelocity(body.getVelocity().add(impulseVector.div(body.getMass())));
 					target.setVelocity(target.getVelocity().sub(impulseVector.div(target.getMass())));
+					if (target.getVelocity().magnitude() > 1 && target.getMass() == Float.POSITIVE_INFINITY) {
+						int a = 0;
+						a++;
+					}
 				}
 			}
 		}

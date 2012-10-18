@@ -2,6 +2,8 @@ package physiks;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -22,6 +24,8 @@ public class PhysiKsSim extends BasicGame {
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
 	
+	int spawnCooldown;
+	
 	private PhysicsEngine physEngine;
 	private RenderEngine renderEngine;
 	private List<RigidBody> entities;
@@ -33,62 +37,22 @@ public class PhysiKsSim extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		entities = new ArrayList<RigidBody>();
 		
-		List<Vector2D> points1 = new ArrayList<Vector2D>();
-		points1.add(new Vector2D(10, 0));
-		points1.add(new Vector2D(20, 10));
-		points1.add(new Vector2D(10, 20));
-		points1.add(new Vector2D(0, 10));
-		
-		List<Vector2D> points2 = new ArrayList<Vector2D>();
-		points2.add(new Vector2D(0, 0));
-		points2.add(new Vector2D(20, 0));
-		points2.add(new Vector2D(20, 20));
-		points2.add(new Vector2D(0, 20));
-		
-		RigidBody body1 = new PolyBody(100, 285, 25, points1);
-		RigidBody body2 = new PolyBody(300, 300, 25, points2);
-		body1.setVelocity(new Vector2D(200, 0));
-		
-		entities.add(body1);
-		entities.add(body2);
-		
 		List<PolyBody> walls = generateWalls();
 		entities.addAll(walls);
 
 		physEngine = new PhysicsEngine(entities);
 		renderEngine = new RenderEngine(entities);
+		
+		spawnCooldown = 0;
 	}
 	
 	private List<PolyBody> generateWalls() {
 		List<PolyBody> walls = new ArrayList<PolyBody>();
 		
-		List<Vector2D> leftWallPoints = new ArrayList<Vector2D>();
-		leftWallPoints.add(new Vector2D(0, 0));
-		leftWallPoints.add(new Vector2D(WIDTH, 0));
-		leftWallPoints.add(new Vector2D(WIDTH, HEIGHT));
-		leftWallPoints.add(new Vector2D(0, HEIGHT));
-		PolyBody leftWall = new PolyBody(-WIDTH, 0, Float.POSITIVE_INFINITY, leftWallPoints);
-		
-		List<Vector2D> rightWallPoints = new ArrayList<Vector2D>();
-		rightWallPoints.add(new Vector2D(0, 0));
-		rightWallPoints.add(new Vector2D(WIDTH, 0));
-		rightWallPoints.add(new Vector2D(WIDTH, HEIGHT));
-		rightWallPoints.add(new Vector2D(0, HEIGHT));
-		PolyBody rightWall = new PolyBody(WIDTH, 0, Float.POSITIVE_INFINITY, rightWallPoints);
-		
-		List<Vector2D> topWallPoints = new ArrayList<Vector2D>();
-		topWallPoints.add(new Vector2D(0, 0));
-		topWallPoints.add(new Vector2D(WIDTH, 0));
-		topWallPoints.add(new Vector2D(WIDTH, HEIGHT));
-		topWallPoints.add(new Vector2D(0, HEIGHT));
-		PolyBody topWall = new PolyBody(0, -HEIGHT, Float.POSITIVE_INFINITY, topWallPoints);
-		
-		List<Vector2D> bottomWallPoints = new ArrayList<Vector2D>();
-		bottomWallPoints.add(new Vector2D(0, 0));
-		bottomWallPoints.add(new Vector2D(WIDTH, 0));
-		bottomWallPoints.add(new Vector2D(WIDTH, HEIGHT));
-		bottomWallPoints.add(new Vector2D(0, HEIGHT));
-		PolyBody bottomWall = new PolyBody(0, HEIGHT, Float.POSITIVE_INFINITY, bottomWallPoints);
+		PolyBody leftWall = createBox(-WIDTH, 0, WIDTH, HEIGHT, Float.POSITIVE_INFINITY);
+		PolyBody rightWall = createBox(WIDTH, 0, WIDTH, HEIGHT, Float.POSITIVE_INFINITY);
+		PolyBody topWall = createBox(0, -HEIGHT, WIDTH, HEIGHT, Float.POSITIVE_INFINITY);
+		PolyBody bottomWall = createBox(0, HEIGHT - 100, WIDTH, HEIGHT, Float.POSITIVE_INFINITY);
 		
 		walls.add(leftWall);
 		walls.add(rightWall);
@@ -105,6 +69,73 @@ public class PhysiKsSim extends BasicGame {
 
 	public void update(GameContainer gameContainer, int delta) throws SlickException {
 		physEngine.update(delta);
+		
+		spawnCooldown += delta;
+		if (Mouse.isButtonDown(0)) {
+			spawn(Mouse.getX(), Mouse.getY());
+		}
+	}
+	
+	private void spawn(int x, int y) {
+		if (spawnCooldown < 300) {
+			return;
+		}
+		spawnCooldown = 0;
+		
+		spawnBlock(x, y);
+	}
+	
+	private void spawnBlock(int x, int y) {		
+		float mass = 100;
+		float scale = 1;
+		RigidBody body = createDiamond(x, HEIGHT - y, mass, scale);
+		
+		entities.add(body);
+	}
+	
+	private void spawnRandom(int x, int y) {		
+		int xSpread = 200;
+		int ySpread = 200;
+		
+		float boxWidth = 20;
+		float boxHeight = 20;
+		float mass = 100;
+		
+		RigidBody body;
+		
+		for (int i = 0; i < 10; i++) {
+			float scale = 1;
+			float xPos = (float)Math.random() * xSpread + x - xSpread / 2;
+			float yPos = (float)Math.random() * ySpread + (HEIGHT - y) - ySpread / 2;
+			
+			if (i % 2 == 0) {
+				body = createDiamond(xPos, yPos, mass, scale);
+			} else {
+				body = createBox(xPos, yPos, boxWidth, boxHeight, mass);
+			}
+
+			entities.add(body);
+		}
+	}
+	
+	private PolyBody createDiamond(float x, float y, float mass, float scale) {
+		List<Vector2D> points = new ArrayList<Vector2D>();
+		points.add(new Vector2D(10, 0).mult(scale));
+		points.add(new Vector2D(20, 10).mult(scale));
+		points.add(new Vector2D(10, 20).mult(scale));
+		points.add(new Vector2D(0, 10).mult(scale));
+		
+		return new PolyBody(x, y, mass, points);
+	}
+	
+	private PolyBody createBox(float x, float y, float width, float height, float mass) {
+		List<Vector2D> points = new ArrayList<Vector2D>();
+		points.add(new Vector2D(0, 0));
+		points.add(new Vector2D(width, 0));
+		points.add(new Vector2D(width, height));
+		points.add(new Vector2D(0, height));
+		
+		return new PolyBody(x, y, mass, points);
 	}
 
 	public static void main(String[] args) {
