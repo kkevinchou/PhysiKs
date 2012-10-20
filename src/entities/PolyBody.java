@@ -37,11 +37,6 @@ public class PolyBody extends RigidBody {
 	}
 	
 	public List<Vector2D> getPoints() {
-		if (getId() == 0) {
-			int a = 0;
-			a++;
-		}
-		
 		List<Vector2D> worldPoints = new ArrayList<Vector2D>();
 		Vector2D position = getPosition();
 		

@@ -8,6 +8,7 @@ import collision.SatResult;
 import collision.SeparatingAxisTest;
 
 
+import entities.PolyBody;
 import entities.RigidBody;
 import forces.*;
 import geometry.Vector2D;
@@ -60,7 +61,15 @@ public class PhysicsEngine {
 				if (separatingVector != null) {
 					body.setPosition(body.getPosition().add(separatingVector));
 					
-					Vector2D collisionNormal = separatingVector.normalize();
+					Vector2D separatingAxis = SeparatingAxisTest.getSatResult(body, target).getSeparatingAxis();
+					Vector2D collisionNormal = calculateResolutionVector(body, target);
+					
+					Vector2D vectorToTarget = target.getPosition().sub(body.getPosition());
+					if (collisionNormal.normalizedProjection(vectorToTarget) > 0) {
+						collisionNormal = collisionNormal.mult(-1);
+					}
+					collisionNormal = separatingVector.normalize();
+					
 					float impulse = calculateImpulseMagnitude(body, target, collisionNormal);
 					
 					Vector2D impulseVector = collisionNormal.mult(impulse);
@@ -73,6 +82,90 @@ public class PhysicsEngine {
 				}
 			}
 		}
+	}
+	
+	private Vector2D calculateResolutionVector(RigidBody a, RigidBody b) {
+		Vector2D closingVelocity = a.getVelocity().sub(b.getVelocity());
+		
+		if ((a instanceof PolyBody) && (b instanceof PolyBody)) {
+			PolyBody body1 = (PolyBody)a;
+			PolyBody body2 = (PolyBody)b;
+			
+			float b1Min = Float.POSITIVE_INFINITY;
+			float b1Max = Float.NEGATIVE_INFINITY;
+			float b2Min = Float.POSITIVE_INFINITY;
+			float b2Max = Float.NEGATIVE_INFINITY;
+			
+			List<Vector2D> b1Points = body1.getPoints();
+			List<Vector2D> b2Points = body2.getPoints();
+			
+			for (Vector2D point : b1Points) {
+				float b1PointProjectionOnNormal = point.normalizedProjection(closingVelocity);
+				if (b1PointProjectionOnNormal < b1Min) {
+					b1Min = b1PointProjectionOnNormal;
+				}
+				if (b1PointProjectionOnNormal > b1Max) {
+					b1Max = b1PointProjectionOnNormal;
+				}
+			}
+			
+			for (Vector2D point : b2Points) {
+				float b2PointProjectionOnNormal = point.normalizedProjection(closingVelocity);
+				if (b2PointProjectionOnNormal < b2Min) {
+					b2Min = b2PointProjectionOnNormal;
+				}
+				if (b2PointProjectionOnNormal > b2Max) {
+					b2Max = b2PointProjectionOnNormal;
+				}
+			}
+			
+			if ((b1Max <= b2Min) || (b2Max <= b1Min)) {
+				System.out.println("Error: calculateResolutionVector called when the two bodies are not overlapping");
+			} else {
+				float smallestMax = Math.min(b1Max, b2Max);
+				float biggestMin = Math.max(b1Min, b2Min);
+				float resolutionMagnitude = smallestMax - biggestMin;
+				return closingVelocity.normalize().mult(-resolutionMagnitude);
+			}
+		}
+		System.out.println("Error: [PhysicsEngine.calculateResolutionVector] Non polybody arguments are not supported");
+		return null;
+	}
+	
+	// Gets the point on body2 that is closest to body1
+	private Vector2D getClosestPoint(PolyBody body1, PolyBody body2) {
+		List<Vector2D> testPoints = body2.getPoints();
+		List<Vector2D> edgePoints = body1.getPoints();
+		
+		Vector2D minPoint = null;
+		float minDistance = Float.POSITIVE_INFINITY;
+		
+		for (int i = 0, size = edgePoints.size(); i < size; i++) {
+			Vector2D a = edgePoints.get(i);
+			Vector2D b = edgePoints.get((i + 1) % size);
+			
+			Vector2D edge = b.sub(a);
+			
+			for (Vector2D testPoint : testPoints) {
+				float distFromA = a.sub(testPoint).magnitude();
+				float distFromB = b.sub(testPoint).magnitude();
+				float perpendicularDistance = Math.abs(testPoint.sub(a).normalizedProjection(edge.perpendicular()));
+				
+				float minTestPointDistance = Math.min(distFromA, distFromB);
+				minTestPointDistance = Math.min(minTestPointDistance, perpendicularDistance);
+				
+				if (minTestPointDistance < minDistance) {
+					minDistance = minTestPointDistance;
+					minPoint = testPoint;
+				}
+			}
+		}
+		
+		if (minPoint == null) {
+			System.out.println("Error [PhysicsEngine:getClosestPoint] minPoint was unexpectedly found to be null");
+		}
+		
+		return minPoint;
 	}
 	
 	private float calculateImpulseMagnitude(RigidBody body1, RigidBody body2, Vector2D collisionNormal) {

@@ -37,6 +37,16 @@ public class PhysiKsSim extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		entities = new ArrayList<RigidBody>();
 		
+		PolyBody p;
+		
+		p = createDiamond(100, HEIGHT - 100 - 20, 20, 20, 100);
+		p.setVelocity(new Vector2D(100, 0));
+		entities.add(p);
+		
+		p = createDiamond(500, HEIGHT - 100 - 20, 20, 20, 100);
+		p.setVelocity(new Vector2D(-100, 0));
+		entities.add(p);
+		
 		List<PolyBody> walls = generateWalls();
 		entities.addAll(walls);
 
@@ -82,7 +92,7 @@ public class PhysiKsSim extends BasicGame {
 		}
 		spawnCooldown = 0;
 		
-		spawnBlock(x, y);
+		spawnRandom(x, y);
 	}
 	
 	private void spawnBlock(int x, int y) {		

@@ -25,7 +25,7 @@ public abstract class SeparatingAxisTest {
 			
 			float b1Min = Float.POSITIVE_INFINITY;
 			float b1Max = Float.NEGATIVE_INFINITY;
-			float b2Min = Float.POSITIVE_INFINITY;;
+			float b2Min = Float.POSITIVE_INFINITY;
 			float b2Max = Float.NEGATIVE_INFINITY;
 			
 			List<Vector2D> b1Points = body1.getPoints();
@@ -70,6 +70,13 @@ public abstract class SeparatingAxisTest {
 					float smallestMax = Math.min(b1Max, b2Max);
 					float biggestMin = Math.max(b1Min, b2Min);
 					float separatingMagnitude = smallestMax - biggestMin;
+					
+					// Mathematical errors - Using an epsilon.
+					if (separatingMagnitude < 0.0001) {
+						separatingAxis = normal.perpendicular();
+						collisionDetected = false;
+						break;
+					}
 					
 					if (separatingMagnitude < minSeparatingMagnitude) {
 						minSeparatingMagnitude = separatingMagnitude;
