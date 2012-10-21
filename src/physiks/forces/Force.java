@@ -1,6 +1,6 @@
-package forces;
+package physiks.forces;
 
-import geometry.Vector2D;
+import physiks.geometry.Vector2D;
 
 public interface Force {
 	public Vector2D calculateForce();

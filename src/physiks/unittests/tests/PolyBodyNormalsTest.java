@@ -1,10 +1,11 @@
 package physiks.unittests.tests;
 
-import entities.PolyBody;
-import geometry.Vector2D;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import physiks.entities.PolyBody;
+import physiks.geometry.Vector2D;
 
 public final class PolyBodyNormalsTest extends Test {
 	@Override

@@ -1,7 +1,7 @@
-package forces;
+package physiks.forces;
 
-import entities.RigidBody;
-import geometry.Vector2D;
+import physiks.entities.RigidBody;
+import physiks.geometry.Vector2D;
 
 public class Gravity implements Force {
 	RigidBody owner;

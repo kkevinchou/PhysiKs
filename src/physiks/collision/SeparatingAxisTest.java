@@ -1,11 +1,12 @@
-package collision;
+package physiks.collision;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import entities.PolyBody;
-import entities.RigidBody;
-import geometry.Vector2D;
+import physiks.entities.PolyBody;
+import physiks.entities.RigidBody;
+import physiks.geometry.Vector2D;
+
 
 public abstract class SeparatingAxisTest {
 	/*

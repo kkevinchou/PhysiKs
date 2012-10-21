@@ -1,13 +1,14 @@
 package physiks.unittests.tests;
 
-import entities.PolyBody;
-import geometry.Vector2D;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import collision.SatResult;
-import collision.SeparatingAxisTest;
+import physiks.collision.SatResult;
+import physiks.collision.SeparatingAxisTest;
+import physiks.entities.PolyBody;
+import physiks.geometry.Vector2D;
+
 
 public final class SatTest extends Test {
 	@Override

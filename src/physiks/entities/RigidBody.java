@@ -1,11 +1,12 @@
-package entities;
+package physiks.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import physiks.forces.Force;
+import physiks.geometry.Vector2D;
+import physiks.util.IntGenerator;
 
-import forces.Force;
-import geometry.Vector2D;
-import util.IntGenerator;
+
 
 public abstract class RigidBody {
 	private float mass;

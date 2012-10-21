@@ -1,17 +1,18 @@
-package engine;
+package physiks.engine;
 
 import java.util.List;
 
-import collision.CollisionChecker;
-import collision.CollisionResult;
-import collision.SatResult;
-import collision.SeparatingAxisTest;
+import physiks.collision.CollisionChecker;
+import physiks.collision.CollisionResult;
+import physiks.collision.SatResult;
+import physiks.collision.SeparatingAxisTest;
+import physiks.entities.PolyBody;
+import physiks.entities.RigidBody;
+import physiks.forces.*;
+import physiks.geometry.Vector2D;
 
 
-import entities.PolyBody;
-import entities.RigidBody;
-import forces.*;
-import geometry.Vector2D;
+
 
 public class PhysicsEngine {
 	private List<RigidBody> entities;
@@ -45,7 +46,7 @@ public class PhysicsEngine {
 			body.clearForces();
 			
 			if (body.getMass() != Float.POSITIVE_INFINITY) {
-//				body.addForce(new Gravity(body));
+				body.addForce(new Gravity(body));
 			}
 
 			Vector2D netForce = body.calculateNetForce();

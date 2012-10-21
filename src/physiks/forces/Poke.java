@@ -1,6 +1,6 @@
-package forces;
+package physiks.forces;
 
-import geometry.Vector2D;
+import physiks.geometry.Vector2D;
 
 public class Poke implements Force {
 	private Vector2D force;

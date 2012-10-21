@@ -1,6 +1,6 @@
-package collision;
+package physiks.collision;
 
-import geometry.Vector2D;
+import physiks.geometry.Vector2D;
 
 public final class SatResult {
 	private final Vector2D separatingAxis;

@@ -1,8 +1,9 @@
-package entities;
+package physiks.entities;
 
 import java.util.ArrayList;
 import java.util.List;
-import geometry.Vector2D;
+
+import physiks.geometry.Vector2D;
 
 public class PolyBody extends RigidBody {
 	List<Vector2D> normals;

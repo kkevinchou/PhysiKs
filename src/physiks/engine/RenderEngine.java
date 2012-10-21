@@ -1,4 +1,4 @@
-package engine;
+package physiks.engine;
 
 import java.util.List;
 
@@ -7,11 +7,11 @@ import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Polygon;
 
 import physiks.PhysiKsSim;
+import physiks.entities.*;
+import physiks.geometry.Vector2D;
+import physiks.util.Util;
 
-import util.Util;
 
-import entities.*;
-import geometry.Vector2D;
 
 public class RenderEngine {
 	private List<RigidBody> entities;

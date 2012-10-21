@@ -1,4 +1,4 @@
-package util;
+package physiks.util;
 
 import org.lwjgl.Sys;
 

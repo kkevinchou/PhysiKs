@@ -10,13 +10,14 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
+import physiks.engine.PhysicsEngine;
+import physiks.engine.RenderEngine;
+import physiks.entities.PolyBody;
+import physiks.entities.RigidBody;
+import physiks.forces.Gravity;
+import physiks.geometry.Vector2D;
 
-import engine.PhysicsEngine;
-import engine.RenderEngine;
-import entities.PolyBody;
-import entities.RigidBody;
-import forces.Gravity;
-import geometry.Vector2D;
+
 
 
 public class PhysiKsSim extends BasicGame {
@@ -37,18 +38,18 @@ public class PhysiKsSim extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		entities = new ArrayList<RigidBody>();
 		
-		PolyBody p1;
-		PolyBody p2;
-		
-		p1 = createBox(100, HEIGHT - 100 - 20, 20, 20, 100);
-		p1.setVelocity(new Vector2D(100, 0));
-		entities.add(p1);
-		
-		p2 = createBox(300, HEIGHT - 100 - 20, 20, 20, 100);
-		entities.add(p2);
+//		PolyBody p1;
+//		PolyBody p2;
+//		
+//		p1 = createBox(100, HEIGHT - 100 - 20, 20, 20, 100);
+//		p1.setVelocity(new Vector2D(100, 0));
+//		entities.add(p1);
+//		
+//		p2 = createBox(300, HEIGHT - 100 - 20, 20, 20, 100);
+//		entities.add(p2);
 		
 		List<PolyBody> walls = generateWalls();
-//		entities.addAll(walls);
+		entities.addAll(walls);
 
 		physEngine = new PhysicsEngine(entities);
 		renderEngine = new RenderEngine(entities);
@@ -119,10 +120,10 @@ public class PhysiKsSim extends BasicGame {
 			float xPos = (float)Math.random() * xSpread + x - xSpread / 2;
 			float yPos = (float)Math.random() * ySpread + (HEIGHT - y) - ySpread / 2;
 			
-			if (i % 2 == 0) {
-				body = createDiamond(xPos, yPos, width, height, mass);
-			} else {
+			if (i % 2 == 3) {
 				body = createBox(xPos, yPos, width, height, mass);
+			} else {
+				body = createDiamond(xPos, yPos, width, height, mass);
 			}
 
 			entities.add(body);

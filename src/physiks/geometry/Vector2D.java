@@ -1,4 +1,4 @@
-package geometry;
+package physiks.geometry;
 
 public final class Vector2D {
 	private final float x;
