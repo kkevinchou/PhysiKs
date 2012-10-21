@@ -37,18 +37,18 @@ public class PhysiKsSim extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		entities = new ArrayList<RigidBody>();
 		
-		PolyBody p;
+		PolyBody p1;
+		PolyBody p2;
 		
-		p = createDiamond(100, HEIGHT - 100 - 20, 20, 20, 100);
-		p.setVelocity(new Vector2D(100, 0));
-		entities.add(p);
+		p1 = createBox(100, HEIGHT - 100 - 20, 20, 20, 100);
+		p1.setVelocity(new Vector2D(100, 0));
+		entities.add(p1);
 		
-		p = createDiamond(500, HEIGHT - 100 - 20, 20, 20, 100);
-		p.setVelocity(new Vector2D(-100, 0));
-		entities.add(p);
+		p2 = createBox(300, HEIGHT - 100 - 20, 20, 20, 100);
+		entities.add(p2);
 		
 		List<PolyBody> walls = generateWalls();
-		entities.addAll(walls);
+//		entities.addAll(walls);
 
 		physEngine = new PhysicsEngine(entities);
 		renderEngine = new RenderEngine(entities);

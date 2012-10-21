@@ -27,7 +27,8 @@ public class PhysicsEngine {
 		
 		float deltaInSeconds = (float)delta/1000;
 		
-		for (RigidBody body : entities) {
+		for (RigidBody b : entities) {
+			PolyBody body = (PolyBody)b;
 			Vector2D velocity = body.getVelocity();
 			
 			if (Math.abs(velocity.getX()) < 0.01f) {
@@ -44,14 +45,15 @@ public class PhysicsEngine {
 			body.clearForces();
 			
 			if (body.getMass() != Float.POSITIVE_INFINITY) {
-				body.addForce(new Gravity(body));
+//				body.addForce(new Gravity(body));
 			}
-			
+
 			Vector2D netForce = body.calculateNetForce();
 			Vector2D acceleration = netForce.div(body.getMass());
 			body.setAcceleration(acceleration);
-				
-			for (RigidBody target : entities) {
+
+			for (RigidBody t : entities) {
+				PolyBody target = (PolyBody)t;
 				if (body.getId() == target.getId()) continue;
 				if (body.getMass() == Float.POSITIVE_INFINITY) continue;
 				
@@ -62,23 +64,23 @@ public class PhysicsEngine {
 					body.setPosition(body.getPosition().add(separatingVector));
 					
 					Vector2D separatingAxis = SeparatingAxisTest.getSatResult(body, target).getSeparatingAxis();
-					Vector2D collisionNormal = calculateResolutionVector(body, target);
+					Vector2D collisionNormal = separatingVector.normalize();
 					
-					Vector2D vectorToTarget = target.getPosition().sub(body.getPosition());
-					if (collisionNormal.normalizedProjection(vectorToTarget) > 0) {
-						collisionNormal = collisionNormal.mult(-1);
+					Vector2D closestTargetPointToBody = getClosestPoint(body, target);
+					Vector2D closestBodyPointToTarget = getClosestPoint(target, body);
+					float distFromClosestPoints = closestBodyPointToTarget.sub(closestTargetPointToBody).magnitude();
+					
+					if (distFromClosestPoints < 1) {
+						collisionNormal = body.getVelocity().normalize().mult(-1);
 					}
-					collisionNormal = separatingVector.normalize();
 					
 					float impulse = calculateImpulseMagnitude(body, target, collisionNormal);
 					
 					Vector2D impulseVector = collisionNormal.mult(impulse);
 					body.setVelocity(body.getVelocity().add(impulseVector.div(body.getMass())));
 					target.setVelocity(target.getVelocity().sub(impulseVector.div(target.getMass())));
-					if (target.getVelocity().magnitude() > 1 && target.getMass() == Float.POSITIVE_INFINITY) {
-						int a = 0;
-						a++;
-					}
+					
+					int a = 0;
 				}
 			}
 		}
@@ -127,8 +129,9 @@ public class PhysicsEngine {
 				float resolutionMagnitude = smallestMax - biggestMin;
 				return closingVelocity.normalize().mult(-resolutionMagnitude);
 			}
+		} else {
+			System.out.println("Error: [PhysicsEngine.calculateResolutionVector] Non polybody arguments are not supported");
 		}
-		System.out.println("Error: [PhysicsEngine.calculateResolutionVector] Non polybody arguments are not supported");
 		return null;
 	}
 	
@@ -152,7 +155,11 @@ public class PhysicsEngine {
 				float perpendicularDistance = Math.abs(testPoint.sub(a).normalizedProjection(edge.perpendicular()));
 				
 				float minTestPointDistance = Math.min(distFromA, distFromB);
-				minTestPointDistance = Math.min(minTestPointDistance, perpendicularDistance);
+				
+				if ((Math.abs(testPoint.sub(a).normalizedProjection(edge)) < edge.magnitude()) &&
+						(Math.abs(testPoint.sub(b).normalizedProjection(edge)) < edge.magnitude())) {
+					minTestPointDistance = perpendicularDistance;
+				}
 				
 				if (minTestPointDistance < minDistance) {
 					minDistance = minTestPointDistance;
