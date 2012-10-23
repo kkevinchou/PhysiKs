@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import physiks.forces.Force;
+import physiks.geometry.Rectangle;
 import physiks.geometry.Vector2D;
 import physiks.util.IntGenerator;
 
@@ -73,6 +74,8 @@ public abstract class RigidBody {
 		
 		return netForce;
 	}
+	
+	public abstract Rectangle getAABoundingBox();
 	
 	public void clearForces() {
 		forces.clear();

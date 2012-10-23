@@ -33,7 +33,6 @@ public class PhysicsEngine {
 		List<RigidBody> collisionCandidates = entities;
 		
 		quadTree.clear();
-//		quadTree = new QuadTree(0, 0, PhysiKsSim.WIDTH, PhysiKsSim.HEIGHT);
 		for (RigidBody entity : entities) {
 			quadTree.add(entity);
 		}
@@ -76,7 +75,6 @@ public class PhysicsEngine {
 				if (separatingVector != null) {
 					body.setPosition(body.getPosition().add(separatingVector));
 					
-					Vector2D separatingAxis = SeparatingAxisTest.getSatResult(body, target).getSeparatingAxis();
 					Vector2D collisionNormal = separatingVector.normalize();
 					
 					Vector2D closestTargetPointToBody = getClosestPoint(body, target);

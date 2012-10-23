@@ -3,6 +3,7 @@ package physiks.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import physiks.geometry.Rectangle;
 import physiks.geometry.Vector2D;
 
 public class PolyBody extends RigidBody {
@@ -35,6 +36,37 @@ public class PolyBody extends RigidBody {
 				normals.add(normal.mult(-1));
 			}
 		}
+	}
+	
+	public Rectangle getAABoundingBox() {
+		int maxX = Integer.MIN_VALUE;
+		int maxY = Integer.MIN_VALUE;
+		int minX = Integer.MAX_VALUE;
+		int minY = Integer.MAX_VALUE;
+		
+		
+		for (Vector2D point : getPoints()) {
+			float x = point.getX();
+			float y = point.getY();
+			
+			if (x > maxX) {
+				maxX = (int)x;
+			}
+			
+			if (x < minX) {
+				minX = (int)x;
+			}
+			
+			if (y > maxY) {
+				maxY = (int)y;
+			}
+			
+			if (y < minY) {
+				minY = (int)y;
+			}
+		}
+		
+		return new Rectangle(minX, minY, maxX - minX + 1, maxY - minY + 1);
 	}
 	
 	public List<Vector2D> getPoints() {

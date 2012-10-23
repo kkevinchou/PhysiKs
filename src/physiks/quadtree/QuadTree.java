@@ -60,21 +60,25 @@ public class QuadTree {
 	}
 	
 	public boolean intersects(RigidBody body) {
-		List<Vector2D> points = new ArrayList<Vector2D>();
+		Rectangle boundingBox = body.getAABoundingBox();
 		
-		float maxX = dimension.width - 1;
-		float maxY = dimension.height - 1;
+		if (boundingBox.x > (dimension.x + dimension.width - 1)) {
+			return false;
+		}
 		
-		points.add(new Vector2D(0, 0));
-		points.add(new Vector2D(maxX, 0));
-		points.add(new Vector2D(maxX, maxY));
-		points.add(new Vector2D(0, maxY));
+		if ((boundingBox.x + boundingBox.width - 1) < dimension.x) {
+			return false;
+		}
 		
-		PolyBody tempBody = new PolyBody(dimension.x, dimension.y, 1, points);
+		if (boundingBox.y > (dimension.y + dimension.height - 1)) {
+			return false;
+		}
 		
-		SatResult result = SeparatingAxisTest.getSatResult(tempBody, body);
+		if ((boundingBox.y + boundingBox.height - 1) < dimension.y) {
+			return false;
+		}
 		
-		return (result.getSeparatingAxis() == null);
+		return true;
 	}
 	
 	public List<RigidBody> getIntersectionCandidates(RigidBody body) {
