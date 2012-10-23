@@ -11,9 +11,11 @@ public class TestDriver {
 		
 		Test a = new PolyBodyNormalsTest();
 		Test b = new SatTest();
+		Test c = new QuadTreeTest();
 		
 		tests.add(a);
 		tests.add(b);
+		tests.add(c);
 		
 		System.out.println("Starting Tests...");
 		

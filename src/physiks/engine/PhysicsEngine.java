@@ -2,6 +2,7 @@ package physiks.engine;
 
 import java.util.List;
 
+import physiks.PhysiKsSim;
 import physiks.collision.CollisionChecker;
 import physiks.collision.CollisionResult;
 import physiks.collision.SatResult;
@@ -10,17 +11,18 @@ import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
 import physiks.forces.*;
 import physiks.geometry.Vector2D;
-
-
+import physiks.quadtree.QuadTree;
 
 
 public class PhysicsEngine {
 	private List<RigidBody> entities;
 	private List<Force> forces;
+	private QuadTree quadTree;
 	private static final float coefficientOfRestitution = 0.7f;
 	
 	public PhysicsEngine(List<RigidBody> entities) {
 		this.entities = entities;
+		quadTree = new QuadTree(-PhysiKsSim.WIDTH, -PhysiKsSim.HEIGHT, PhysiKsSim.WIDTH*3, PhysiKsSim.HEIGHT*3);
 	}
 	
 	public void update(int delta) {
@@ -28,6 +30,14 @@ public class PhysicsEngine {
 		
 		float deltaInSeconds = (float)delta/1000;
 		
+		List<RigidBody> collisionCandidates = entities;
+		
+		quadTree.clear();
+//		quadTree = new QuadTree(0, 0, PhysiKsSim.WIDTH, PhysiKsSim.HEIGHT);
+		for (RigidBody entity : entities) {
+			quadTree.add(entity);
+		}
+
 		for (RigidBody b : entities) {
 			PolyBody body = (PolyBody)b;
 			Vector2D velocity = body.getVelocity();
@@ -52,8 +62,10 @@ public class PhysicsEngine {
 			Vector2D netForce = body.calculateNetForce();
 			Vector2D acceleration = netForce.div(body.getMass());
 			body.setAcceleration(acceleration);
-
-			for (RigidBody t : entities) {
+			
+			collisionCandidates = quadTree.getIntersectionCandidates(body);
+			
+			for (RigidBody t : collisionCandidates) {
 				PolyBody target = (PolyBody)t;
 				if (body.getId() == target.getId()) continue;
 				if (body.getMass() == Float.POSITIVE_INFINITY) continue;

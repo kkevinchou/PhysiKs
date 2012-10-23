@@ -38,16 +38,6 @@ public class PhysiKsSim extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		entities = new ArrayList<RigidBody>();
 		
-//		PolyBody p1;
-//		PolyBody p2;
-//		
-//		p1 = createBox(100, HEIGHT - 100 - 20, 20, 20, 100);
-//		p1.setVelocity(new Vector2D(100, 0));
-//		entities.add(p1);
-//		
-//		p2 = createBox(300, HEIGHT - 100 - 20, 20, 20, 100);
-//		entities.add(p2);
-		
 		List<PolyBody> walls = generateWalls();
 		entities.addAll(walls);
 
@@ -59,16 +49,16 @@ public class PhysiKsSim extends BasicGame {
 	
 	private List<PolyBody> generateWalls() {
 		List<PolyBody> walls = new ArrayList<PolyBody>();
-		
+
+		PolyBody bottomWall = createBox(0, HEIGHT - 100, WIDTH, HEIGHT, Float.POSITIVE_INFINITY);
 		PolyBody leftWall = createBox(-WIDTH, 0, WIDTH, HEIGHT, Float.POSITIVE_INFINITY);
 		PolyBody rightWall = createBox(WIDTH, 0, WIDTH, HEIGHT, Float.POSITIVE_INFINITY);
 		PolyBody topWall = createBox(0, -HEIGHT, WIDTH, HEIGHT, Float.POSITIVE_INFINITY);
-		PolyBody bottomWall = createBox(0, HEIGHT - 100, WIDTH, HEIGHT, Float.POSITIVE_INFINITY);
 		
+		walls.add(bottomWall);
 		walls.add(leftWall);
 		walls.add(rightWall);
 		walls.add(topWall);
-		walls.add(bottomWall);
 		
 		return walls;
 	}
@@ -132,20 +122,28 @@ public class PhysiKsSim extends BasicGame {
 	
 	private PolyBody createDiamond(float x, float y, float width, float height, float mass) {
 		List<Vector2D> points = new ArrayList<Vector2D>();
-		points.add(new Vector2D(width / 2, 0));
-		points.add(new Vector2D(width, height / 2));
-		points.add(new Vector2D(width / 2, height));
-		points.add(new Vector2D(0, height / 2));
+		
+		float maxX = width - 1;
+		float maxY = height - 1;
+		
+		points.add(new Vector2D(maxX / 2, 0));
+		points.add(new Vector2D(maxX, maxX / 2));
+		points.add(new Vector2D(maxX / 2, maxX));
+		points.add(new Vector2D(0, maxX / 2));
 		
 		return new PolyBody(x, y, mass, points);
 	}
 	
 	private PolyBody createBox(float x, float y, float width, float height, float mass) {
 		List<Vector2D> points = new ArrayList<Vector2D>();
+		
+		float maxX = width - 1;
+		float maxY = height - 1;
+		
 		points.add(new Vector2D(0, 0));
-		points.add(new Vector2D(width, 0));
-		points.add(new Vector2D(width, height));
-		points.add(new Vector2D(0, height));
+		points.add(new Vector2D(maxX, 0));
+		points.add(new Vector2D(maxX, maxY));
+		points.add(new Vector2D(0, maxY));
 		
 		return new PolyBody(x, y, mass, points);
 	}
