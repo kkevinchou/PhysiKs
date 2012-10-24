@@ -2,6 +2,8 @@ package physiks.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.newdawn.slick.Color;
+
 import physiks.forces.Force;
 import physiks.geometry.Rectangle;
 import physiks.geometry.Vector2D;
@@ -14,11 +16,18 @@ public abstract class RigidBody {
 	private Vector2D position;
 	private Vector2D velocity;
 	private Vector2D acceleration;
+	private VisualData visualData;
 	
 	private List<Force> forces;
 	
 	private final int id = intGenerator.nextInt();
 	private static final IntGenerator intGenerator  = new IntGenerator();
+	private List<Color> colors;
+	
+	private Color generateRandomColor() {
+		int randomOffset = (int)(Math.random() * colors.size());
+		return colors.get(randomOffset);
+	}
 	
 	public RigidBody(float x, float y, float mass) {
 		this.mass = mass;
@@ -27,6 +36,18 @@ public abstract class RigidBody {
 		acceleration = new Vector2D(0, 0);
 		
 		forces = new ArrayList<Force>();
+		
+		// Color palette, should move this to a separate static class later
+		colors = new ArrayList<Color>();
+		colors.add(new Color(245, 162, 63));
+		colors.add(new Color(168, 112, 44));
+		colors.add(new Color(109, 190, 194));
+		colors.add(new Color(255, 245, 81));
+		colors.add(new Color(215, 20, 20));
+		colors.add(new Color(225, 123, 10));
+		
+		visualData = new VisualData();
+		visualData.setColor(generateRandomColor());
 	}
 	
 	public int getId() {
@@ -73,6 +94,10 @@ public abstract class RigidBody {
 		}
 		
 		return netForce;
+	}
+	
+	public VisualData getVisualComponent() {
+		return visualData;
 	}
 	
 	public abstract Rectangle getAABoundingBox();

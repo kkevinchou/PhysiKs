@@ -3,15 +3,10 @@ package physiks.engine;
 import java.util.List;
 
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Polygon;
 
-import physiks.PhysiKsSim;
 import physiks.entities.*;
 import physiks.geometry.Vector2D;
-import physiks.util.Util;
-
-
 
 public class RenderEngine {
 	private List<RigidBody> entities;
@@ -22,6 +17,7 @@ public class RenderEngine {
 	
 	private void drawBody(RigidBody r, Graphics graphics) {
 		Polygon sprite = new Polygon();
+		VisualData visualData = r.getVisualComponent();
 		
 		if (r instanceof PolyBody) {
 			PolyBody body = (PolyBody)r;
@@ -34,6 +30,7 @@ public class RenderEngine {
 			sprite.setClosed(true);
 		}
 		
+		graphics.setColor(visualData.getColor());
 		graphics.draw(sprite);
 	}
 	

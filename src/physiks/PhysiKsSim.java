@@ -106,7 +106,7 @@ public class PhysiKsSim extends BasicGame {
 		
 		RigidBody body;
 		
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 20; i++) {
 			float xPos = (float)Math.random() * xSpread + x - xSpread / 2;
 			float yPos = (float)Math.random() * ySpread + (HEIGHT - y) - ySpread / 2;
 			
@@ -127,9 +127,9 @@ public class PhysiKsSim extends BasicGame {
 		float maxY = height - 1;
 		
 		points.add(new Vector2D(maxX / 2, 0));
-		points.add(new Vector2D(maxX, maxX / 2));
-		points.add(new Vector2D(maxX / 2, maxX));
-		points.add(new Vector2D(0, maxX / 2));
+		points.add(new Vector2D(maxX, maxY / 2));
+		points.add(new Vector2D(maxX / 2, maxY));
+		points.add(new Vector2D(0, maxY / 2));
 		
 		return new PolyBody(x, y, mass, points);
 	}

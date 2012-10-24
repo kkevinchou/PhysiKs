@@ -13,6 +13,7 @@ public class PolyBody extends RigidBody {
 
 	public PolyBody(float x, float y, float mass, List<Vector2D> points) {
 		super(x, y, mass);
+		
 		normals = new ArrayList<Vector2D>();
 		this.points = new ArrayList<Vector2D>();
 		center = Vector2D.ZERO_VECTOR;
