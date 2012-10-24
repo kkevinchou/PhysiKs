@@ -1,6 +1,6 @@
 # PhysiKs! - A 2D rigid body physics engine
 
-## Complete
+## Completed
 * Definition of arbitrary bodies through point locations
 * Linear collision detection and resolution
 * Spatial partitioning to speed up broad-phase collision detection
