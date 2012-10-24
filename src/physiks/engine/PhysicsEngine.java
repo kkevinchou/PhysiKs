@@ -30,7 +30,7 @@ public class PhysicsEngine {
 		
 		List<RigidBody> collisionCandidates = entities;
 		
-		quadTree.clear();
+		quadTree = new QuadTree(-PhysiKsSim.WIDTH, -PhysiKsSim.HEIGHT, PhysiKsSim.WIDTH*3, PhysiKsSim.HEIGHT*3);
 		for (RigidBody entity : entities) {
 			quadTree.add(entity);
 		}

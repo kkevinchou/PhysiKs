@@ -20,7 +20,7 @@ public class PolyBody extends RigidBody {
 		
 		for (Vector2D point : points) {
 			center = center.add(point);
-			this.points.add(point.copy());
+			this.points.add(point);
 		}
 		center = center.div(points.size());
 		

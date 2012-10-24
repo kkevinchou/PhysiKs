@@ -59,7 +59,7 @@ public abstract class SeparatingAxisTest {
 					}
 				}
 				
-				if ((b1Max <= b2Min) || (b2Max <= b1Min)) {
+				if ((b1Max < b2Min) || (b2Max < b1Min)) {
 					// Separating axis found. No collision between the two bodies
 					separatingAxis = normal.perpendicular();
 					collisionDetected = false;

@@ -41,6 +41,10 @@ public class PhysiKsSim extends BasicGame {
 		List<PolyBody> walls = generateWalls();
 		entities.addAll(walls);
 
+//		entities.add(createBox(450, HEIGHT - 120, 20, 20, 1));
+//		entities.add(createBox(500, HEIGHT - 300, 20, 20, 1));
+//		entities.add(createBox(519, HEIGHT - 300, 20, 20, 1));
+
 		physEngine = new PhysicsEngine(entities);
 		renderEngine = new RenderEngine(entities);
 		
@@ -106,7 +110,7 @@ public class PhysiKsSim extends BasicGame {
 		
 		RigidBody body;
 		
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 40; i++) {
 			float xPos = (float)Math.random() * xSpread + x - xSpread / 2;
 			float yPos = (float)Math.random() * ySpread + (HEIGHT - y) - ySpread / 2;
 			
