@@ -3,8 +3,6 @@ package physiks.engine;
 import java.util.List;
 
 import physiks.PhysiKsSim;
-import physiks.collision.CollisionChecker;
-import physiks.collision.CollisionResult;
 import physiks.collision.SatResult;
 import physiks.collision.SeparatingAxisTest;
 import physiks.entities.PolyBody;
