@@ -10,3 +10,5 @@
 * Verification of rigid bodies by rejecting non-convex definitions
 * Resting contacts
 * Basic constraints such as springs
+
+(http://imgur.com/SrwGq)
