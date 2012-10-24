@@ -11,4 +11,4 @@
 * Resting contacts
 * Basic constraints such as springs
 
-![kevin chou meow](https://github.com/kkevinchou/PhysiKs/tree/master/pics/pic1.png)
+![kevin chou meow](https://github.com/kkevinchou/PhysiKs/pics/pic1.png)
