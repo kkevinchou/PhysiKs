@@ -11,4 +11,4 @@
 * Resting contacts
 * Basic constraints such as springs
 
-[![solarized dualmode](https://github.com/kevchou/PhysiKs/pics/pic1.png)]
+![kevin chou meow](https://github.com/kevchou/PhysiKs/pics/pic1.png)
