@@ -11,4 +11,4 @@
 * Resting contacts
 * Basic constraints such as springs
 
-![Rawr](http://imgur.com/SrwGq)
+![ Rawr ](http://imgur.com/SrwGq)
