@@ -10,6 +10,16 @@ public class PolyBody extends RigidBody {
 	List<Vector2D> normals;
 	List<Vector2D> points;
 	Vector2D center;
+	
+	public PolyBody(float x, float y, float width, float height) {
+		super(x, y, 1);
+		points = new ArrayList<Vector2D>();
+		
+		points.add(new Vector2D(0, 0));
+		points.add(new Vector2D(width - 1, 0));
+		points.add(new Vector2D(width - 1, height - 1));
+		points.add(new Vector2D(0, height - 1));
+	}
 
 	public PolyBody(float x, float y, float mass, List<Vector2D> points) {
 		super(x, y, mass);

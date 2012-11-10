@@ -2,7 +2,6 @@ package physiks;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -14,11 +13,7 @@ import physiks.engine.PhysicsEngine;
 import physiks.engine.RenderEngine;
 import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
-import physiks.forces.Gravity;
 import physiks.geometry.Vector2D;
-
-
-
 
 public class PhysiKsSim extends BasicGame {
 	private static final String TITLE = "PhysiKs";
@@ -37,13 +32,17 @@ public class PhysiKsSim extends BasicGame {
 
 	public void init(GameContainer gc) throws SlickException {
 		entities = new ArrayList<RigidBody>();
-		
-		List<PolyBody> walls = generateWalls();
-		entities.addAll(walls);
 
-//		entities.add(createBox(450, HEIGHT - 120, 20, 20, 1));
-//		entities.add(createBox(500, HEIGHT - 300, 20, 20, 1));
-//		entities.add(createBox(519, HEIGHT - 300, 20, 20, 1));
+		entities.add(createBox(0, HEIGHT - 130, 20, 20, 1));
+		entities.get(0).setVelocity(new Vector2D(100, 0));
+		entities.add(createBox(100, HEIGHT - 40, 500, 20, Float.POSITIVE_INFINITY));
+//		entities.get(1).setVelocity(new Vector2D(-100, 0));
+//		entities.add(createDiamond(500, HEIGHT - 300, 20, 20, 1));
+//		entities.get(2).setVelocity(new Vector2D(0, 100));
+//		entities.add(createDiamond(500, HEIGHT - 120, 20, 20, 1));
+		
+//		List<PolyBody> walls = generateWalls();
+//		entities.addAll(walls);
 
 		physEngine = new PhysicsEngine(entities);
 		renderEngine = new RenderEngine(entities);
@@ -110,7 +109,7 @@ public class PhysiKsSim extends BasicGame {
 		
 		RigidBody body;
 		
-		for (int i = 0; i < 40; i++) {
+		for (int i = 0; i < 20; i++) {
 			float xPos = (float)Math.random() * xSpread + x - xSpread / 2;
 			float yPos = (float)Math.random() * ySpread + (HEIGHT - y) - ySpread / 2;
 			

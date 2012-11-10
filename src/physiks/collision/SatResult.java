@@ -3,8 +3,8 @@ package physiks.collision;
 import physiks.geometry.Vector2D;
 
 public final class SatResult {
-	private final Vector2D separatingAxis;
-	private final Vector2D minimumSeparatingVector;
+	private Vector2D separatingAxis;
+	private Vector2D minimumSeparatingVector;
 	
 	public SatResult(Vector2D separatingAxis, Vector2D minimumSeparatingVector) {
 		this.separatingAxis = separatingAxis;
