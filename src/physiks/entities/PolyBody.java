@@ -26,7 +26,7 @@ public class PolyBody extends RigidBody {
 		
 		normals = new ArrayList<Vector2D>();
 		this.points = new ArrayList<Vector2D>();
-		center = Vector2D.ZERO_VECTOR;
+		center = Vector2D.ZERO;
 		
 		for (Vector2D point : points) {
 			center = center.add(point);
