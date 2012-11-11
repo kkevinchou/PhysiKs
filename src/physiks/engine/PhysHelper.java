@@ -12,11 +12,12 @@ import physiks.geometry.Vector2D;
 
 public abstract class PhysHelper {
 	
-	/*
-	 * Calculates the amount of overlap of two bodies projected along an axis
-	 * 
+	/**
+	 * @param body1
+	 * @param body2
+	 * @param axis
+	 * @return The amount of overlap of two bodies projected along an axis
 	 */
-	
 	public static float overlapAlongAxis(RigidBody body1, RigidBody body2, Vector2D axis) {
 		PolyBody b1 = (PolyBody)body1;
 		PolyBody b2 = (PolyBody)body2;
@@ -105,11 +106,11 @@ public abstract class PhysHelper {
 		return minPoint;
 	}
 	
-	/*
-	 * Sets the velocity to zero if it is below a certain threshold
-	 * 
+	/**
+	 * @param body
+	 * @param threshold
+	 * @effect Sets the velocity to zero if it is below a certain threshold
 	 */
-	
 	public static void zeroOutMicroVelocities(RigidBody body, float threshold) {
 		Vector2D velocity = body.getVelocity();
 		

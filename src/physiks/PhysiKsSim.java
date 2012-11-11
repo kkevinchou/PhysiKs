@@ -33,8 +33,8 @@ public class PhysiKsSim extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		entities = new ArrayList<RigidBody>();
 
-		entities.add(PhysSimHelper.createBox(0, HEIGHT - 130, 20, 20, 1));
-		entities.get(0).setVelocity(new Vector2D(100, 0));
+		entities.add(PhysSimHelper.createBox(100, HEIGHT - 130, 20, 20, 1));
+		entities.get(0).setVelocity(new Vector2D(0, 0));
 		entities.add(PhysSimHelper.createBox(100, HEIGHT - 40, 500, 20, Float.POSITIVE_INFINITY));
 
 		physEngine = new PhysicsEngine(entities);
