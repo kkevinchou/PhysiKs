@@ -50,20 +50,18 @@ public abstract class PhysHelper {
 			}
 		}
 		
-		float b1Projection = b1Max - b1Min;
-		float b2Projection = b2Max - b2Min;
+		float b1Projection = b1Max - b1Min + 1;
+		float b2Projection = b2Max - b2Min + 1;
 		
 		float combinedProjectionMax = Math.max(b1Max, b2Max);
 		float combinedProjectionMin = Math.min(b1Min, b2Min);
-		float combinedProjection = combinedProjectionMax - combinedProjectionMin;
+		float combinedProjection = combinedProjectionMax - combinedProjectionMin + 1;
 		
 		if (combinedProjection >= b1Projection + b2Projection) {
 			return 0;
 		} else {
-			float smallestMax = Math.min(b1Max, b2Max);
-			float biggestMin = Math.max(b1Min, b2Min);
-			float overlap = smallestMax - biggestMin;
-			return overlap + 1;
+			float overlap = (b1Projection + b2Projection) - combinedProjection;
+			return overlap;
 		}
 	}
 	

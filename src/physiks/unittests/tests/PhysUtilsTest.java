@@ -23,7 +23,7 @@ public class PhysUtilsTest extends Test {
 		PolyBody d = new PolyBody(1, 0, 2, 2);
 		
 		overlap = PhysHelper.overlapAlongAxis(c, d, new Vector2D(1, 0));
-		tAssert(overlap, 0f);
+		tAssert(overlap, 1f);
 		
 		PolyBody e = new PolyBody(0, 0, 4, 4);
 		PolyBody f = new PolyBody(2, 0, 4, 4);

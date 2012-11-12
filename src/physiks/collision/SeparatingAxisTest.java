@@ -10,12 +10,13 @@ import physiks.geometry.Vector2D;
 
 
 public abstract class SeparatingAxisTest {
-	/*
-	 * Finds the separating axis of two rigid bodies
-	 * 
-	 * Params: The two bodies to test for a separating axis
-	 * Return: A vector representation of the axis. Or null if there is no separating axis (the bodies are intersecting)
+	
+	/**
+	 * @param a
+	 * @param b
+	 * @return A vector representation of a separating axis. Or null if there is no separating axis
 	 */
+	
 	public static Vector2D getSeparatingAxis(RigidBody a, RigidBody b) {
 		PolyBody body1 = (PolyBody)a;
 		PolyBody body2 = (PolyBody)b;
@@ -26,8 +27,8 @@ public abstract class SeparatingAxisTest {
 		
 		for (Vector2D normal : normals) {
 			float overlap = PhysHelper.overlapAlongAxis(body1, body2, normal);
-			if (overlap > 0) {
-				return normal;
+			if (overlap == 0) {
+				return normal.perpendicular();
 			}
 		}
 
