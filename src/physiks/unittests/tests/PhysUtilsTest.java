@@ -30,5 +30,29 @@ public class PhysUtilsTest extends Test {
 		
 		overlap = PhysHelper.overlapAlongAxis(e, f, new Vector2D(1, 0));
 		tAssert(overlap, 2f);
+		
+		PolyBody g = new PolyBody(0, 0, 4, 4);
+		PolyBody h = new PolyBody(4, 4, 4, 4);
+		
+		overlap = PhysHelper.overlapAlongAxis(g, h, new Vector2D(1, 0));
+		tAssert(overlap, 0f);
+		overlap = PhysHelper.overlapAlongAxis(g, h, new Vector2D(0, -1));
+		tAssert(overlap, 0f);
+		
+		PolyBody i = new PolyBody(0, 0, 4, 4);
+		PolyBody j = new PolyBody(3, 3, 4, 4);
+		
+		overlap = PhysHelper.overlapAlongAxis(i, j, new Vector2D(1, 0));
+		tAssert(overlap, 1f);
+		overlap = PhysHelper.overlapAlongAxis(i, j, new Vector2D(0, -1));
+		tAssert(overlap, 1f);
+		
+		PolyBody k = new PolyBody(0, 0, 4, 4);
+		PolyBody l = new PolyBody(4, 0, 4, 4);
+		
+		overlap = PhysHelper.overlapAlongAxis(k, l, new Vector2D(1, 0));
+		tAssert(overlap, 0f);
+		overlap = PhysHelper.overlapAlongAxis(k, l, new Vector2D(0, -1));
+		tAssert(overlap, 4f);
 	}
 }
