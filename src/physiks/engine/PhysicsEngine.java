@@ -11,7 +11,6 @@ import physiks.forces.*;
 import physiks.geometry.Vector2D;
 import physiks.quadtree.QuadTree;
 
-
 public class PhysicsEngine {
 	private List<RigidBody> entities;
 	private QuadTree quadTree;
@@ -48,26 +47,48 @@ public class PhysicsEngine {
 			this.velocity = velocity;
 			this.acceleration = acceleration;
 		}
+		
+		public Vector2D getPosition() {
+			return position;
+		}
+
+		public Vector2D getVelocity() {
+			return velocity;
+		}
+
+		public Vector2D getAcceleration() {
+			return acceleration;
+		}
+
 	}
 	
 	private void performTimeStep(RigidBody body, float delta) {
 		PhysHelper.zeroOutMicroVelocities(body, 0.01f);
-
-		advanceBody(body, delta);
-		List<RigidBody> collisionCandidates = quadTree.getIntersectionCandidates(body);
 		
+		Vector2D prevPosition = body.getPosition();
+		Vector2D prevVelocity = body.getVelocity();
+		Vector2D prevAcceleratioin = body.getAcceleration();
+		
+		SpatialData prevSpatialData = new SpatialData(prevPosition, prevVelocity, prevAcceleratioin);
+		
+		advanceBody(body, delta);
+		
+		List<RigidBody> collisionCandidates = quadTree.getIntersectionCandidates(body);
 		for (RigidBody target : collisionCandidates) {
-			checkForCollision(body, target);
+			checkForCollision(body, target, prevSpatialData);
+			if (body.getId() == 0) {
+				System.out.println(body.getPosition());
+			}
 		}
 	}
 	
 	private void advanceBody(RigidBody body, float delta) {
-		Vector2D prevPosition = body.getPosition();
-		Vector2D prevVelocity = body.getVelocity();
-		Vector2D prevAcceleratioin = body.getAcceleration();
-
-		body.setPosition(body.getPosition().add(prevVelocity.mult(delta)));
-		body.setVelocity(body.getVelocity().add(body.getAcceleration().mult(delta)));
+		Vector2D position = body.getPosition();
+		Vector2D velocity = body.getVelocity();
+		Vector2D acceleration = body.getAcceleration();
+		
+		body.setPosition(position.add(velocity.mult(delta)));
+		body.setVelocity(velocity.add(acceleration.mult(delta)));
 		
 		body.clearForces();
 		if (body.getMass() != Float.POSITIVE_INFINITY) {
@@ -75,11 +96,11 @@ public class PhysicsEngine {
 		}
 
 		Vector2D netForce = body.calculateNetForce();
-		Vector2D acceleration = netForce.div(body.getMass());
-		body.setAcceleration(acceleration);
+		Vector2D newAcceleration = netForce.div(body.getMass());
+		body.setAcceleration(newAcceleration);
 	}
 	
-	private void checkForCollision(RigidBody a, RigidBody b) {
+	private void checkForCollision(RigidBody a, RigidBody b, SpatialData prevSpatialData) {
 		PolyBody body = (PolyBody)a;
 		PolyBody target = (PolyBody)b;
 		
@@ -97,6 +118,10 @@ public class PhysicsEngine {
 			
 			body.setPosition(body.getPosition().add(separatingVector));
 			
+			if (body.getId() == 0) {
+//				System.out.println(body.getPosition());
+			}
+			
 			Vector2D collisionNormal = separatingVector.normalize();
 			collisionNormal = new Vector2D(0, -1);
 			collisionNormal = collisionNormal.normalize();
@@ -106,6 +131,11 @@ public class PhysicsEngine {
 			Vector2D impulseVector = collisionNormal.mult(impulse);
 			body.setVelocity(body.getVelocity().add(impulseVector.div(body.getMass())));
 			target.setVelocity(target.getVelocity().sub(impulseVector.div(target.getMass())));
+		}
+		
+		if (body.getId() == 0 && body.getPosition().getY() >= 380) {
+			int asdf;
+			asdf = 0;
 		}
 	}
 }

@@ -59,7 +59,14 @@ public abstract class SeparatingAxisTest {
 					}
 				}
 				
-				if ((b1Max < b2Min) || (b2Max < b1Min)) {
+				float b1Projection = b1Max - b1Min;
+				float b2Projection = b2Max - b2Min;
+				
+				float combinedProjectionMax = Math.max(b1Max, b2Max);
+				float combinedProjectionMin = Math.min(b1Min, b2Min);
+				float combinedProjection = combinedProjectionMax - combinedProjectionMin;
+				
+				if (combinedProjection >= b1Projection + b2Projection) {
 					// Separating axis found. No collision between the two bodies
 					separatingAxis = normal.perpendicular();
 					collisionDetected = false;
@@ -73,11 +80,11 @@ public abstract class SeparatingAxisTest {
 					float separatingMagnitude = smallestMax - biggestMin;
 					
 					// Mathematical errors - Using an epsilon.
-					if (separatingMagnitude < 0.0001) {
-						separatingAxis = normal.perpendicular();
-						collisionDetected = false;
-						break;
-					}
+//					if (Math.abs(separatingMagnitude) < 0.0001) {
+//						separatingAxis = normal.perpendicular();
+//						collisionDetected = false;
+//						break;
+//					}
 					
 					if (separatingMagnitude < minSeparatingMagnitude) {
 						minSeparatingMagnitude = separatingMagnitude;

@@ -13,14 +13,14 @@ public class PhysUtilsTest extends Test {
 
 	@Override
 	public void run() {
-		PolyBody a = new PolyBody(0, 0, 1, 1);
-		PolyBody b = new PolyBody(0, 0, 1, 1);
+		PolyBody a = new PolyBody(0, 0, 2, 2);
+		PolyBody b = new PolyBody(0, 0, 2, 2);
 		
 		float overlap = PhysHelper.overlapAlongAxis(a, b, new Vector2D(1, 0));
-		tAssert(overlap, 1f);
+		tAssert(overlap, 2f);
 		
-		PolyBody c = new PolyBody(0, 0, 1, 1);
-		PolyBody d = new PolyBody(1, 0, 1, 1);
+		PolyBody c = new PolyBody(0, 0, 2, 2);
+		PolyBody d = new PolyBody(1, 0, 2, 2);
 		
 		overlap = PhysHelper.overlapAlongAxis(c, d, new Vector2D(1, 0));
 		tAssert(overlap, 0f);

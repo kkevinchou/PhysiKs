@@ -50,7 +50,14 @@ public abstract class PhysHelper {
 			}
 		}
 		
-		if ((b1Max < b2Min) || (b2Max < b1Min)) {
+		float b1Projection = b1Max - b1Min;
+		float b2Projection = b2Max - b2Min;
+		
+		float combinedProjectionMax = Math.max(b1Max, b2Max);
+		float combinedProjectionMin = Math.min(b1Min, b2Min);
+		float combinedProjection = combinedProjectionMax - combinedProjectionMin;
+		
+		if (combinedProjection >= b1Projection + b2Projection) {
 			return 0;
 		} else {
 			float smallestMax = Math.min(b1Max, b2Max);

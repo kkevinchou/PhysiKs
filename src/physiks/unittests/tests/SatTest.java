@@ -4,9 +4,11 @@ package physiks.unittests.tests;
 import java.util.ArrayList;
 import java.util.List;
 
+import physiks.PhysSimHelper;
 import physiks.collision.SatResult;
 import physiks.collision.SeparatingAxisTest;
 import physiks.entities.PolyBody;
+import physiks.entities.RigidBody;
 import physiks.geometry.Vector2D;
 
 
@@ -18,9 +20,10 @@ public final class SatTest extends Test {
 
 	@Override
 	public final void run() {
-		simpleIntersection();
-		noIntersection();
+//		noIntersection();
 		zeroSeparation();
+//		testSmallEpsilonOverlap();
+//		simpleIntersection();
 	}
 	
 	private void simpleIntersection() {
@@ -86,5 +89,13 @@ public final class SatTest extends Test {
 		
 		// PolyBodies are right next to each other, technically not colliding.
 		tAssert(result.getSeparatingAxis(), new Vector2D(0, 1));
+	}
+	
+	private void testSmallEpsilonOverlap() {
+		RigidBody body1 = PhysSimHelper.createBox(0, 0.024f, 2, 2, 1);
+		RigidBody body2 = PhysSimHelper.createBox(0, 2, 2, 2, 1);
+		
+		SatResult result = SeparatingAxisTest.getSatResult(body1, body2);
+		tAssert(result.getSeparatingAxis(), null);
 	}
 }
