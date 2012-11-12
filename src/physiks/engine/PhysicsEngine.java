@@ -107,9 +107,8 @@ public class PhysicsEngine {
 		if (body.getId() == target.getId()) return;
 		if (body.getMass() == Float.POSITIVE_INFINITY) return;
 		
-		SatResult satResult = SeparatingAxisTest.getSatResult(body, target);
+		Vector2D separatingAxis = SeparatingAxisTest.getSeparatingAxis(body, target);
 
-		Vector2D separatingAxis = satResult.getSeparatingAxis();
 		if (separatingAxis == null) {
 			Vector2D separatingVector = PhysHelper.calculateSeparatingVector(body, target);
 			
