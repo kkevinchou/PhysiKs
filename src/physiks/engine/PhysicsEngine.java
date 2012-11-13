@@ -133,7 +133,9 @@ public class PhysicsEngine {
 		Vector2D velocity = body1.getVelocity();
 		
 		if (closestBody1Points.size() == 2) {
-			collisionNormal = closestBody1Points.get(0).sub(closestBody1Points.get(1)).perpendicular().normalize();
+			Vector2D firstPoint = closestBody1Points.get(0);
+			Vector2D secondPoint = closestBody1Points.get(1);
+			collisionNormal = firstPoint.sub(secondPoint).perpendicular().normalize();
 			if (collisionNormal.pointsInSameDirection(velocity)) {
 				collisionNormal = collisionNormal.mult(-1);
 			}
