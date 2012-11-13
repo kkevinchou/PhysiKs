@@ -13,6 +13,21 @@ public class PhysUtilsTest extends Test {
 
 	@Override
 	public void run() {
+		overlapTest();
+		pointToEdgeTest();
+	}
+	
+	private void pointToEdgeTest() {
+		Vector2D p = new Vector2D(5, 5);
+		Vector2D a = new Vector2D(0, 0);
+		Vector2D b = new Vector2D(20, 0);
+		
+		float distance = PhysHelper.pointDistanceToEdge(p, a, b);
+		
+		tAssert(distance, 5f);
+	}
+	
+	private void overlapTest() {
 		PolyBody a = new PolyBody(0, 0, 2, 2);
 		PolyBody b = new PolyBody(0, 0, 2, 2);
 		
@@ -53,6 +68,6 @@ public class PhysUtilsTest extends Test {
 		overlap = PhysHelper.overlapAlongAxis(k, l, new Vector2D(1, 0));
 		tAssert(overlap, 0f);
 		overlap = PhysHelper.overlapAlongAxis(k, l, new Vector2D(0, -1));
-		tAssert(overlap, 4f);
+		tAssert(overlap, 4f);		
 	}
 }

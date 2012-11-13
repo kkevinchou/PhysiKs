@@ -3,12 +3,8 @@ package physiks.quadtree;
 import java.util.ArrayList;
 import java.util.List;
 
-import physiks.collision.SatResult;
-import physiks.collision.SeparatingAxisTest;
-import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
 import physiks.geometry.Rectangle;
-import physiks.geometry.Vector2D;
 
 /*
  * Labels for quad tree children:

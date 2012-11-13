@@ -65,50 +65,36 @@ public abstract class PhysHelper {
 		}
 	}
 	
-	/*
-	 * Gets the closest points on body2 with respect to body1
-	 * 
-	 * Parameters: Two bodies
-	 * Return: A list of (Vector2D a, List<Edges> b)
-	 *     Where a is the closest point and b is the edges that it is closest to
+	/**
+	 * @param body1
+	 * @param body2
+	 * @return A list of points on body1 that's closest to body2
 	 */
-	
-	// TODO: might make more sense to have a getClosestEdges function (return closest edge as well 
-	// as the points that resulted in it being the closest).  However, this function may be useful as well
-	public static Vector2D getClosestPoints(PolyBody body1, PolyBody body2) {
-		List<Vector2D> testPoints = body2.getPoints();
-		List<Vector2D> edgePoints = body1.getPoints();
-		List<Pair<Vector2D,List<Edge>>> closestPointsToEdges = new ArrayList<Pair<Vector2D,List<Edge>>>();
+	public static List<Vector2D> getClosestPoints(PolyBody body1, PolyBody body2) {
+		List<Vector2D> testPoints = body1.getPoints();
+		List<Vector2D> edgePoints = body2.getPoints();
 		
-		Vector2D minPoint = null;
 		float minDistance = Float.POSITIVE_INFINITY;
+		List<Vector2D> minPoints = new ArrayList<Vector2D>();
 		
 		for (int i = 0, size = edgePoints.size(); i < size; i++) {
 			Vector2D a = edgePoints.get(i);
 			Vector2D b = edgePoints.get((i + 1) % size);
 			
-			Vector2D edgeVector = b.sub(a);
-			
 			for (Vector2D testPoint : testPoints) {
-				float distFromA = a.sub(testPoint).magnitude();
-				float distFromB = b.sub(testPoint).magnitude();
-				float perpendicularDistance = Math.abs(testPoint.sub(a).normalizedProjection(edgeVector.perpendicular()));
+				float testPointDistance = pointDistanceToEdge(testPoint, a, b);
 				
-				float minTestPointDistance = Math.min(distFromA, distFromB);
-				
-				if ((Math.abs(testPoint.sub(a).normalizedProjection(edgeVector)) < edgeVector.magnitude()) &&
-						(Math.abs(testPoint.sub(b).normalizedProjection(edgeVector)) < edgeVector.magnitude())) {
-					minTestPointDistance = perpendicularDistance;
-				}
-				
-				if (minTestPointDistance < minDistance) {
-					minDistance = minTestPointDistance;
-					minPoint = testPoint;
+				if (testPointDistance < minDistance) {
+					minDistance = testPointDistance;
+					minPoints.clear();
+					minPoints.add(testPoint);
+				} else if (testPointDistance == minDistance) {
+					minPoints.add(testPoint);
 				}
 			}
 		}
 		
-		return minPoint;
+		return minPoints;
 	}
 	
 	/**
@@ -147,54 +133,23 @@ public abstract class PhysHelper {
 		return impulse;
 	}
 	
-	/*
-	 * Calculates the separating vector which resolves the overlapping of a onto b.
-	 * The result takes into account the velocities of the two bodies
-	 * 
-	 */
-	
-	public static Vector2D calculateSeparatingVector(RigidBody a, RigidBody b) {
-		Vector2D closingVelocity = a.getVelocity().sub(b.getVelocity());
+	public static float pointDistanceToEdge(Vector2D point, Vector2D edgePointA, Vector2D edgePointB) {
+		Vector2D edgeVector = edgePointA.sub(edgePointB);
 		
-		PolyBody body1 = (PolyBody)a;
-		PolyBody body2 = (PolyBody)b;
+		float distFromA = edgePointA.sub(point).magnitude();
+		float distFromB = edgePointB.sub(point).magnitude();
 		
-		float b1Min = Float.POSITIVE_INFINITY;
-		float b1Max = Float.NEGATIVE_INFINITY;
-		float b2Min = Float.POSITIVE_INFINITY;
-		float b2Max = Float.NEGATIVE_INFINITY;
+		float distance = Math.min(distFromA, distFromB);
 		
-		List<Vector2D> b1Points = body1.getPoints();
-		List<Vector2D> b2Points = body2.getPoints();
-		
-		for (Vector2D point : b1Points) {
-			float b1PointProjectionOnNormal = point.normalizedProjection(closingVelocity);
-			if (b1PointProjectionOnNormal < b1Min) {
-				b1Min = b1PointProjectionOnNormal;
-			}
-			if (b1PointProjectionOnNormal > b1Max) {
-				b1Max = b1PointProjectionOnNormal;
-			}
+		// if the test point is "between" the two edge points, it is closest to the edge itself,
+		// not the end points of the edge
+		if ((point.sub(edgePointA).dot(edgeVector) > 0 && point.sub(edgePointB).dot(edgeVector) < 0) || 
+			(point.sub(edgePointA).dot(edgeVector) < 0 && point.sub(edgePointB).dot(edgeVector) > 0)) {
+			
+			float perpendicularDistance = Math.abs(point.sub(edgePointA).normalizedProjection(edgeVector.perpendicular()));
+			distance = perpendicularDistance;
 		}
 		
-		for (Vector2D point : b2Points) {
-			float b2PointProjectionOnNormal = point.normalizedProjection(closingVelocity);
-			if (b2PointProjectionOnNormal < b2Min) {
-				b2Min = b2PointProjectionOnNormal;
-			}
-			if (b2PointProjectionOnNormal > b2Max) {
-				b2Max = b2PointProjectionOnNormal;
-			}
-		}
-		
-		if ((b1Max <= b2Min) || (b2Max <= b1Min)) {
-			System.out.println("Error: calculateResolutionVector called when the two bodies are not overlapping");
-			return null;
-		} else {
-			float smallestMax = Math.min(b1Max, b2Max);
-			float biggestMin = Math.max(b1Min, b2Min);
-			float resolutionMagnitude = smallestMax - biggestMin;
-			return closingVelocity.normalize().mult(-resolutionMagnitude);
-		}
+		return distance;
 	}
 }

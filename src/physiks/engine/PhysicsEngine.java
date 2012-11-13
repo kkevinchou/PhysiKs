@@ -3,7 +3,6 @@ package physiks.engine;
 import java.util.List;
 
 import physiks.PhysiKsSim;
-import physiks.collision.SatResult;
 import physiks.collision.SeparatingAxisTest;
 import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
@@ -36,7 +35,6 @@ public class PhysicsEngine {
 		}
 	}
 	
-
 	public class SpatialData {
 		Vector2D position;
 		Vector2D velocity;
@@ -59,7 +57,6 @@ public class PhysicsEngine {
 		public Vector2D getAcceleration() {
 			return acceleration;
 		}
-
 	}
 	
 	private void performTimeStep(RigidBody body, float delta) {
@@ -76,9 +73,6 @@ public class PhysicsEngine {
 		List<RigidBody> collisionCandidates = quadTree.getIntersectionCandidates(body);
 		for (RigidBody target : collisionCandidates) {
 			checkForCollision(body, target, prevSpatialData);
-			if (body.getId() == 0) {
-				System.out.println(body.getPosition());
-			}
 		}
 	}
 	
@@ -110,20 +104,10 @@ public class PhysicsEngine {
 		Vector2D separatingAxis = SeparatingAxisTest.getSeparatingAxis(body, target);
 
 		if (separatingAxis == null) {
-			Vector2D separatingVector = PhysHelper.calculateSeparatingVector(body, target);
-			
-			// GOAL: rewrite calculateSeparatingVector to not require this line
-			separatingVector = Vector2D.UP.mult(PhysHelper.overlapAlongAxis(body, target, Vector2D.UP));
+			Vector2D collisionNormal = calculateCollisionNormal(body, target);
+			Vector2D separatingVector = calculateSeparatingVector(body, collisionNormal, prevSpatialData);
 			
 			body.setPosition(body.getPosition().add(separatingVector));
-			
-			if (body.getId() == 0) {
-//				System.out.println(body.getPosition());
-			}
-			
-			Vector2D collisionNormal = separatingVector.normalize();
-			collisionNormal = new Vector2D(0, -1);
-			collisionNormal = collisionNormal.normalize();
 			
 			float impulse = PhysHelper.calculateImpulseMagnitude(body, target, collisionNormal);
 			
@@ -131,10 +115,36 @@ public class PhysicsEngine {
 			body.setVelocity(body.getVelocity().add(impulseVector.div(body.getMass())));
 			target.setVelocity(target.getVelocity().sub(impulseVector.div(target.getMass())));
 		}
+	}
+	
+	/*
+	 * Calculates the separating vector which resolves the overlapping of a onto b.
+	 * The result takes into account the velocities of the two bodies
+	 * 
+	 */
+	
+	public static Vector2D calculateCollisionNormal(RigidBody a, RigidBody b) {
+		PolyBody body1 = (PolyBody)a;
+		PolyBody body2 = (PolyBody)b;
 		
-		if (body.getId() == 0 && body.getPosition().getY() >= 380) {
-			int asdf;
-			asdf = 0;
+		List<Vector2D> closestBody1Points = PhysHelper.getClosestPoints(body1, body2);
+		
+		Vector2D collisionNormal = null;
+		
+		if (closestBody1Points.size() == 2) {
+			collisionNormal = closestBody1Points.get(0).sub(closestBody1Points.get(1)).perpendicular().normalize();
+			if (body1.getVelocity().dot(collisionNormal) > 0) {
+				collisionNormal = collisionNormal.mult(-1);
+			}
 		}
+		
+		return collisionNormal;
+	}
+	
+	public static Vector2D calculateSeparatingVector(RigidBody body1, Vector2D collisionNormal, SpatialData prevSpatialData) {
+		float separatingMagnitude = prevSpatialData.getPosition().sub(body1.getPosition()).dot(collisionNormal);
+		Vector2D separatingVector = collisionNormal.mult(separatingMagnitude);
+		
+		return separatingVector;
 	}
 }
