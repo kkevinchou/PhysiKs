@@ -105,7 +105,7 @@ public class PhysicsEngine {
 
 		if (separatingAxis == null) {
 			Vector2D collisionNormal = calculateCollisionNormal(body, target);
-			Vector2D separatingVector = calculateSeparatingVector(body, collisionNormal, prevSpatialData);
+			Vector2D separatingVector = calculateSeparatingVector(body, target, collisionNormal);
 			
 			body.setPosition(body.getPosition().add(separatingVector));
 			
@@ -130,10 +130,11 @@ public class PhysicsEngine {
 		List<Vector2D> closestBody1Points = PhysHelper.getClosestPoints(body1, body2);
 		
 		Vector2D collisionNormal = null;
+		Vector2D velocity = body1.getVelocity();
 		
 		if (closestBody1Points.size() == 2) {
 			collisionNormal = closestBody1Points.get(0).sub(closestBody1Points.get(1)).perpendicular().normalize();
-			if (body1.getVelocity().dot(collisionNormal) > 0) {
+			if (collisionNormal.pointsInSameDirection(velocity)) {
 				collisionNormal = collisionNormal.mult(-1);
 			}
 		}
@@ -141,8 +142,8 @@ public class PhysicsEngine {
 		return collisionNormal;
 	}
 	
-	public static Vector2D calculateSeparatingVector(RigidBody body1, Vector2D collisionNormal, SpatialData prevSpatialData) {
-		float separatingMagnitude = prevSpatialData.getPosition().sub(body1.getPosition()).dot(collisionNormal);
+	public static Vector2D calculateSeparatingVector(RigidBody body1, RigidBody body2, Vector2D collisionNormal) {
+		float separatingMagnitude = PhysHelper.overlapAlongAxis(body1, body2, collisionNormal);
 		Vector2D separatingVector = collisionNormal.mult(separatingMagnitude);
 		
 		return separatingVector;

@@ -97,4 +97,8 @@ public final class Vector2D {
 		}
 		return new Vector2D((float)(x / magnitude), (float)(y / magnitude));
 	}
+	
+	public boolean pointsInSameDirection(Vector2D v) {
+		return this.normalizedProjection(v) > 0;
+	}
 }
