@@ -154,7 +154,7 @@ public class PhysicsEngine {
 	 * 
 	 */
 		
-	public static Vector2D calculateSeparatingVector(RigidBody body1, RigidBody body2, Vector2D collisionNormal) {
+	private Vector2D calculateSeparatingVector(RigidBody body1, RigidBody body2, Vector2D collisionNormal) {
 		float separatingMagnitude = PhysHelper.overlapAlongAxis(body1, body2, collisionNormal);
 		Vector2D separatingVector = collisionNormal.mult(separatingMagnitude);
 		
