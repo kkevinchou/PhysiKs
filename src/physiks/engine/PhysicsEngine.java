@@ -117,24 +117,28 @@ public class PhysicsEngine {
 		}
 	}
 	
-	/*
-	 * Calculates the separating vector which resolves the overlapping of a onto b.
-	 * The result takes into account the velocities of the two bodies
-	 * 
-	 */
-	
 	public static Vector2D calculateCollisionNormal(RigidBody a, RigidBody b) {
 		PolyBody body1 = (PolyBody)a;
 		PolyBody body2 = (PolyBody)b;
 		
+		if (body1.getId() == 0 && body2.getId() == 1) {
+			int ab;
+			ab = 0;
+		}
+		
 		List<Vector2D> closestBody1Points = PhysHelper.getClosestPoints(body1, body2);
+		List<Vector2D> closestBody2Points = PhysHelper.getClosestPoints(body2, body1);
 		
 		Vector2D collisionNormal = null;
 		Vector2D velocity = body1.getVelocity();
 		
+		// TODO: More than 2 closest points
 		if (closestBody1Points.size() == 2) {
 			Vector2D firstPoint = closestBody1Points.get(0);
 			Vector2D secondPoint = closestBody1Points.get(1);
+			
+			// Assumption, collision normal is always pointing in the opposite
+			// direction of the velocity
 			collisionNormal = firstPoint.sub(secondPoint).perpendicular().normalize();
 			if (collisionNormal.pointsInSameDirection(velocity)) {
 				collisionNormal = collisionNormal.mult(-1);
@@ -144,6 +148,12 @@ public class PhysicsEngine {
 		return collisionNormal;
 	}
 	
+	/*
+	 * Calculates the separating vector which resolves the overlapping of a onto; b.
+	 * The result takes into account the velocities of the two bodies
+	 * 
+	 */
+		
 	public static Vector2D calculateSeparatingVector(RigidBody body1, RigidBody body2, Vector2D collisionNormal) {
 		float separatingMagnitude = PhysHelper.overlapAlongAxis(body1, body2, collisionNormal);
 		Vector2D separatingVector = collisionNormal.mult(separatingMagnitude);

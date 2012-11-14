@@ -34,7 +34,8 @@ public class PhysiKsSim extends BasicGame {
 		entities = new ArrayList<RigidBody>();
 
 		entities.add(PhysSimHelper.createBox(150, HEIGHT - 280, 20, 20, 1));
-		entities.get(0).setVelocity(new Vector2D(0, 0));
+		entities.get(0).setVelocity(new Vector2D(100, 0));
+		entities.add(PhysSimHelper.createBox(300, HEIGHT - 280, 20, 20, 1));
 		entities.add(PhysSimHelper.createBox(100, HEIGHT - 200, 500, 20, Float.POSITIVE_INFINITY));
 
 		physEngine = new PhysicsEngine(entities);
