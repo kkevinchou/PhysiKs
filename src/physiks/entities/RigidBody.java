@@ -8,6 +8,7 @@ import physiks.forces.Force;
 import physiks.geometry.Rectangle;
 import physiks.geometry.Vector2D;
 import physiks.util.IntGenerator;
+import physiks.visual.DaVinci;
 import physiks.visual.VisualData;
 
 
@@ -22,12 +23,10 @@ public abstract class RigidBody {
 	private List<Force> forces;
 	
 	private final int id = intGenerator.nextInt();
-	private static final IntGenerator intGenerator  = new IntGenerator();
-	private List<Color> colors;
+	private static final IntGenerator intGenerator = new IntGenerator();
 	
 	private Color generateRandomColor() {
-		int randomOffset = (int)(Math.random() * colors.size());
-		return colors.get(randomOffset);
+		return DaVinci.getInstance().getRandomColor();
 	}
 	
 	public RigidBody(float x, float y, float mass) {
@@ -37,15 +36,6 @@ public abstract class RigidBody {
 		acceleration = new Vector2D(0, 0);
 		
 		forces = new ArrayList<Force>();
-		
-		// Color palette, should move this to a separate static class later
-		colors = new ArrayList<Color>();
-		colors.add(new Color(245, 162, 63));
-		colors.add(new Color(168, 112, 44));
-		colors.add(new Color(109, 190, 194));
-		colors.add(new Color(255, 245, 81));
-		colors.add(new Color(215, 20, 20));
-		colors.add(new Color(225, 123, 10));
 		
 		visualData = new VisualData();
 		visualData.setColor(generateRandomColor());

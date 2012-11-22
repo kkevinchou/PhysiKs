@@ -15,11 +15,11 @@ public class RenderEngine {
 		this.entities = rigidBodies;
 	}
 	
-	private void drawBody(RigidBody r, Graphics graphics) {
+	private void drawBody(RigidBody b, Graphics graphics) {
+		PolyBody body = (PolyBody)b;
 		Polygon sprite = new Polygon();
-		VisualData visualData = r.getVisualComponent();
+		VisualData visualData = b.getVisualComponent();
 		
-		PolyBody body = (PolyBody)r;
 		for (Vector2D point : body.getPoints()) {
 			float x = point.getX();
 			float y = point.getY();
