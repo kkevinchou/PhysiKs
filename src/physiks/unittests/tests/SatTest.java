@@ -1,9 +1,9 @@
 package physiks.unittests.tests;
 
-import physiks.PhysSimHelper;
 import physiks.collision.SeparatingAxisTest;
 import physiks.entities.RigidBody;
 import physiks.geometry.Vector2D;
+import physiks.main.misc.PhysSimHelper;
 
 public final class SatTest extends Test {
 	@Override

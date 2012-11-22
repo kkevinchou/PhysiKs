@@ -9,9 +9,9 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.ShapeRenderer;
 
-import physiks.PhysiKsSim;
 import physiks.entities.*;
 import physiks.geometry.Vector2D;
+import physiks.main.PhysiKsSim;
 
 public class RenderEngine {
 	private Color backgroundColor;

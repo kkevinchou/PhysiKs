@@ -2,7 +2,6 @@ package physiks.engine;
 
 import java.util.List;
 
-import physiks.PhysiKsSim;
 import physiks.collision.SeparatingAxisTest;
 import physiks.engine.misc.PhysHelper;
 import physiks.engine.misc.SpatialData;
@@ -10,6 +9,7 @@ import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
 import physiks.forces.*;
 import physiks.geometry.Vector2D;
+import physiks.main.PhysiKsSim;
 import physiks.quadtree.QuadTree;
 
 public class PhysicsEngine {

@@ -1,4 +1,4 @@
-package physiks;
+package physiks.main;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +11,11 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 import physiks.engine.PhysicsEngine;
+import physiks.engine.misc.SpatialData;
 import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
 import physiks.geometry.Vector2D;
+import physiks.main.misc.PhysSimHelper;
 import physiks.visual.RenderEngine;
 
 public class PhysiKsSim extends BasicGame {
@@ -26,6 +28,7 @@ public class PhysiKsSim extends BasicGame {
 	private PhysicsEngine physEngine;
 	private RenderEngine renderEngine;
 	private List<RigidBody> entities;
+	private List<SpatialData> initialSpatialData;
 	
 	public PhysiKsSim(String title) {
 		super(title);
@@ -46,6 +49,11 @@ public class PhysiKsSim extends BasicGame {
 		points.add(new Vector2D(0, 180));
 		entities.add(new PolyBody(600, 300, Float.POSITIVE_INFINITY, points));
 
+		initialSpatialData = new ArrayList<SpatialData>();
+		for (RigidBody entity : entities) {
+			initialSpatialData.add(new SpatialData(entity));
+		}
+		
 		physEngine = new PhysicsEngine(entities);
 		renderEngine = new RenderEngine(entities);
 		
@@ -57,6 +65,10 @@ public class PhysiKsSim extends BasicGame {
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			System.exit(0);
+		}
+		
+		if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
+			PhysSimHelper.reset(entities, initialSpatialData);
 		}
 		
 		spawnCooldown += delta;

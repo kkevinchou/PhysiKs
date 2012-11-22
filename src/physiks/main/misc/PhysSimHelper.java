@@ -1,11 +1,13 @@
-package physiks;
+package physiks.main.misc;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import physiks.engine.misc.SpatialData;
 import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
 import physiks.geometry.Vector2D;
+import physiks.main.PhysiKsSim;
 
 public abstract class PhysSimHelper {
 	public static PolyBody createDiamond(float x, float y, float width, float height, float mass) {
@@ -87,5 +89,16 @@ public abstract class PhysSimHelper {
 		}
 		
 		return entities;
+	}
+	
+	public static void reset(List<RigidBody> entities, List<SpatialData> spatialData) {
+		for (int i = 0; i < entities.size(); i++) {
+			RigidBody entity = entities.get(i);
+			SpatialData data = spatialData.get(i);
+			
+			entity.setPosition(data.getPosition());
+			entity.setVelocity(data.getVelocity());
+			entity.setAcceleration(data.getAcceleration());
+		}
 	}
 }
