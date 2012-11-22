@@ -2,15 +2,18 @@ package physiks.visual;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.newdawn.slick.Color;
 
 public class DaVinci {
 	private static DaVinci instance = new DaVinci();
-	
+	private Random r;
 	private List<Color> colors;
 
 	private DaVinci() {
+		r = new Random(System.currentTimeMillis());
+		
 		// Color palette, should move this to a separate static class later
 		colors = new ArrayList<Color>();
 		colors.add(new Color(245, 162, 63));
@@ -27,7 +30,7 @@ public class DaVinci {
 	}
 	
 	public Color getRandomColor() {
-		int randomOffset = (int)(Math.random() * colors.size());
+		int randomOffset = r.nextInt(colors.size());
 		return colors.get(randomOffset);
 	}
 	
