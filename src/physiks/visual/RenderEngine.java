@@ -1,4 +1,4 @@
-package physiks.engine;
+package physiks.visual;
 
 import java.util.List;
 
@@ -19,16 +19,13 @@ public class RenderEngine {
 		Polygon sprite = new Polygon();
 		VisualData visualData = r.getVisualComponent();
 		
-		if (r instanceof PolyBody) {
-			PolyBody body = (PolyBody)r;
-			Vector2D position = r.getPosition();
-			for (Vector2D point : body.getPoints()) {
-				float x = point.getX();
-				float y = point.getY();
-				sprite.addPoint(x, y);
-			}
-			sprite.setClosed(true);
+		PolyBody body = (PolyBody)r;
+		for (Vector2D point : body.getPoints()) {
+			float x = point.getX();
+			float y = point.getY();
+			sprite.addPoint(x, y);
 		}
+		sprite.setClosed(true);
 		
 		graphics.setColor(visualData.getColor());
 		graphics.draw(sprite);

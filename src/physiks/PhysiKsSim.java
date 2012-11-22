@@ -11,9 +11,9 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 import physiks.engine.PhysicsEngine;
-import physiks.engine.RenderEngine;
 import physiks.entities.RigidBody;
 import physiks.geometry.Vector2D;
+import physiks.visual.RenderEngine;
 
 public class PhysiKsSim extends BasicGame {
 	private static final String TITLE = "PhysiKs";
@@ -33,7 +33,7 @@ public class PhysiKsSim extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		entities = new ArrayList<RigidBody>();
 
-		entities.add(PhysSimHelper.createBox(150, HEIGHT - 280, 20, 20, 1));
+		entities.add(PhysSimHelper.createBox(80, HEIGHT - 280, 20, 20, 1));
 		entities.get(0).setVelocity(new Vector2D(100, 0));
 		entities.add(PhysSimHelper.createBox(300, HEIGHT - 280, 20, 20, 1));
 		entities.add(PhysSimHelper.createBox(100, HEIGHT - 200, 500, 20, Float.POSITIVE_INFINITY));

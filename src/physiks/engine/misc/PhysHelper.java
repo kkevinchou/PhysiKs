@@ -1,13 +1,11 @@
-package physiks.engine;
+package physiks.engine.misc;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.Pair;
-
+import physiks.engine.PhysicsEngine;
 import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
-import physiks.geometry.Edge;
 import physiks.geometry.Vector2D;
 
 public abstract class PhysHelper {
@@ -100,7 +98,7 @@ public abstract class PhysHelper {
 	/**
 	 * @param body
 	 * @param threshold
-	 * @effect Sets the velocity to zero if it is below a certain threshold
+	 * @effect Sets the velocity component to zero if it is below a certain threshold
 	 */
 	public static void zeroOutMicroVelocities(RigidBody body, float threshold) {
 		Vector2D velocity = body.getVelocity();
@@ -120,7 +118,7 @@ public abstract class PhysHelper {
 	 */
 	
 	public static float calculateImpulseMagnitude(RigidBody body1, RigidBody body2, Vector2D collisionNormal) {
-		// Formula: http://chrishecker.com/images/e/e7/Gdmphys3.pdf
+		// Formula and explanation: http://chrishecker.com/images/e/e7/Gdmphys3.pdf
 		
 		// Assumption, collision normal is always pointing in the opposite
 		// direction of the velocity

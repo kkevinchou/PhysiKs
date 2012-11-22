@@ -4,6 +4,8 @@ import java.util.List;
 
 import physiks.PhysiKsSim;
 import physiks.collision.SeparatingAxisTest;
+import physiks.engine.misc.PhysHelper;
+import physiks.engine.misc.SpatialData;
 import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
 import physiks.forces.*;
@@ -35,44 +37,17 @@ public class PhysicsEngine {
 		}
 	}
 	
-	public class SpatialData {
-		Vector2D position;
-		Vector2D velocity;
-		Vector2D acceleration;
-		
-		public SpatialData(Vector2D position, Vector2D velocity, Vector2D acceleration) {
-			this.position = position;
-			this.velocity = velocity;
-			this.acceleration = acceleration;
-		}
-		
-		public Vector2D getPosition() {
-			return position;
-		}
-
-		public Vector2D getVelocity() {
-			return velocity;
-		}
-
-		public Vector2D getAcceleration() {
-			return acceleration;
-		}
-	}
-	
 	private void performTimeStep(RigidBody body, float delta) {
 		PhysHelper.zeroOutMicroVelocities(body, 0.01f);
-		
-		Vector2D prevPosition = body.getPosition();
-		Vector2D prevVelocity = body.getVelocity();
-		Vector2D prevAcceleratioin = body.getAcceleration();
-		
-		SpatialData prevSpatialData = new SpatialData(prevPosition, prevVelocity, prevAcceleratioin);
+		SpatialData prevSpatialData = new SpatialData(body);
 		
 		advanceBody(body, delta);
 		
 		List<RigidBody> collisionCandidates = quadTree.getIntersectionCandidates(body);
 		for (RigidBody target : collisionCandidates) {
-			checkForCollision(body, target, prevSpatialData);
+			if (collidesWidth(body, target)) {
+				resolveCollision(body, target, prevSpatialData);				
+			}
 		}
 	}
 	
@@ -94,56 +69,55 @@ public class PhysicsEngine {
 		body.setAcceleration(newAcceleration);
 	}
 	
-	private void checkForCollision(RigidBody a, RigidBody b, SpatialData prevSpatialData) {
+	private boolean collidesWidth(RigidBody a, RigidBody b) {
 		PolyBody body = (PolyBody)a;
 		PolyBody target = (PolyBody)b;
 		
-		if (body.getId() == target.getId()) return;
-		if (body.getMass() == Float.POSITIVE_INFINITY) return;
+		if (body.getId() == target.getId()) return false;
+		if (body.getMass() == Float.POSITIVE_INFINITY) return false;
 		
 		Vector2D separatingAxis = SeparatingAxisTest.getSeparatingAxis(body, target);
 
-		if (separatingAxis == null) {
-			Vector2D collisionNormal = calculateCollisionNormal(body, target);
-			Vector2D separatingVector = calculateSeparatingVector(body, target, collisionNormal);
-			
-			body.setPosition(body.getPosition().add(separatingVector));
-			
-			float impulse = PhysHelper.calculateImpulseMagnitude(body, target, collisionNormal);
-			
-			Vector2D impulseVector = collisionNormal.mult(impulse);
-			body.setVelocity(body.getVelocity().add(impulseVector.div(body.getMass())));
-			target.setVelocity(target.getVelocity().sub(impulseVector.div(target.getMass())));
-		}
+		return (separatingAxis == null);
 	}
 	
-	public static Vector2D calculateCollisionNormal(RigidBody a, RigidBody b) {
+	private void resolveCollision(RigidBody a, RigidBody b, SpatialData prevSpatialData) {
+		PolyBody body = (PolyBody)a;
+		PolyBody target = (PolyBody)b;
+		
+		Vector2D collisionNormal = calculateCollisionNormal(body, target, prevSpatialData);
+		Vector2D separatingVector = calculateSeparatingVector(body, target, collisionNormal);
+		
+		body.setPosition(body.getPosition().add(separatingVector));
+		
+		float impulse = PhysHelper.calculateImpulseMagnitude(body, target, collisionNormal);
+		
+		Vector2D impulseVector = collisionNormal.mult(impulse);
+		body.setVelocity(body.getVelocity().add(impulseVector.div(body.getMass())));
+		target.setVelocity(target.getVelocity().sub(impulseVector.div(target.getMass())));
+	}
+	
+	public static Vector2D calculateCollisionNormal(RigidBody a, RigidBody b, SpatialData prevSpatialData) {
 		PolyBody body1 = (PolyBody)a;
 		PolyBody body2 = (PolyBody)b;
 		
-		if (body1.getId() == 0 && body2.getId() == 1) {
-			int ab;
-			ab = 0;
+		SpatialData currentSpatialData = new SpatialData(a);
+		
+		// Load previous position to find the separating axis
+		body1.setPosition(prevSpatialData.getPosition());
+		
+		Vector2D separatingAxis = SeparatingAxisTest.getSeparatingAxis(body1, body2);
+		if (separatingAxis == null) {
+			System.out.println("WTF? no separating axis after rewinding it?");
+			return null;
 		}
 		
-		List<Vector2D> closestBody1Points = PhysHelper.getClosestPoints(body1, body2);
-		List<Vector2D> closestBody2Points = PhysHelper.getClosestPoints(body2, body1);
+		// TODO: Make sure the collision normal is actually the normal of the closest edge.
+		Vector2D collisionNormal = separatingAxis.perpendicular();
+		collisionNormal = collisionNormal.pointAlongWith(body1.getVelocity().mult(-1)).normalize();
 		
-		Vector2D collisionNormal = null;
-		Vector2D velocity = body1.getVelocity();
-		
-		// TODO: More than 2 closest points
-		if (closestBody1Points.size() == 2) {
-			Vector2D firstPoint = closestBody1Points.get(0);
-			Vector2D secondPoint = closestBody1Points.get(1);
-			
-			// Assumption, collision normal is always pointing in the opposite
-			// direction of the velocity
-			collisionNormal = firstPoint.sub(secondPoint).perpendicular().normalize();
-			if (collisionNormal.pointsInSameDirection(velocity)) {
-				collisionNormal = collisionNormal.mult(-1);
-			}
-		}
+		// Reload current position
+		body1.setPosition(currentSpatialData.getPosition());
 		
 		return collisionNormal;
 	}
@@ -153,11 +127,20 @@ public class PhysicsEngine {
 	 * The result takes into account the velocities of the two bodies
 	 * 
 	 */
-		
+
+	// TODO: the separating vector should rewind based on the velocity, then play more
+	// physics in the axis that doesn't collide.
 	private Vector2D calculateSeparatingVector(RigidBody body1, RigidBody body2, Vector2D collisionNormal) {
+		
 		float separatingMagnitude = PhysHelper.overlapAlongAxis(body1, body2, collisionNormal);
 		Vector2D separatingVector = collisionNormal.mult(separatingMagnitude);
-		
+
 		return separatingVector;
+	}
+	
+	private void loadSpatialDataIntoRigidBody(RigidBody body, SpatialData spatialData) {
+		body.setPosition(spatialData.getPosition());
+		body.setVelocity(spatialData.getVelocity());
+		body.setAcceleration(spatialData.getAcceleration());
 	}
 }

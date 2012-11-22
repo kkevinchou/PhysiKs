@@ -1,4 +1,4 @@
-package physiks.entities;
+package physiks.visual;
 
 import org.newdawn.slick.Color;
 

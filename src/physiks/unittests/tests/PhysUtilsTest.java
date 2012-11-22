@@ -1,6 +1,6 @@
 package physiks.unittests.tests;
 
-import physiks.engine.PhysHelper;
+import physiks.engine.misc.PhysHelper;
 import physiks.entities.PolyBody;
 import physiks.geometry.Vector2D;
 
@@ -68,6 +68,12 @@ public class PhysUtilsTest extends Test {
 		overlap = PhysHelper.overlapAlongAxis(k, l, new Vector2D(1, 0));
 		tAssert(overlap, 0f);
 		overlap = PhysHelper.overlapAlongAxis(k, l, new Vector2D(0, -1));
-		tAssert(overlap, 4f);		
+		tAssert(overlap, 4f);
+		
+		PolyBody m = new PolyBody(0, 0, 5, 5);
+		PolyBody n = new PolyBody(0, 1, 5, 5);
+		
+		overlap = PhysHelper.overlapAlongAxis(m, n, new Vector2D(0, 1));
+		tAssert(overlap, 4f);
 	}
 }

@@ -101,4 +101,11 @@ public final class Vector2D {
 	public boolean pointsInSameDirection(Vector2D v) {
 		return this.normalizedProjection(v) > 0;
 	}
+	
+	public Vector2D pointAlongWith(Vector2D v) {
+		if (!pointsInSameDirection(v)) {
+			return this.mult(-1);
+		}
+		return this;
+	}
 }

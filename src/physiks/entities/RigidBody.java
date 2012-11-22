@@ -8,6 +8,7 @@ import physiks.forces.Force;
 import physiks.geometry.Rectangle;
 import physiks.geometry.Vector2D;
 import physiks.util.IntGenerator;
+import physiks.visual.VisualData;
 
 
 
