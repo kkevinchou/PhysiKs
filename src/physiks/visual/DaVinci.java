@@ -23,7 +23,6 @@ public class DaVinci {
 		colors.add(new Color(161, 103, 0));
 		colors.add(new Color(255, 57, 0));
 		colors.add(new Color(253, 115, 157));
-		colors.add(new Color(249, 255, 208));
 		colors.add(new Color(2, 40, 109));
 	}
 	

@@ -19,7 +19,8 @@ public class RenderEngine {
 	private List<RigidBody> entities;
 	
 	public RenderEngine(List<RigidBody> rigidBodies) {
-		backgroundColor = new Color(187, 234, 239);
+//		backgroundColor = new Color(187, 234, 239);
+		backgroundColor = new Color(0, 0, 0);
 		background = new Polygon();
 		
 		background.addPoint(0, 0);

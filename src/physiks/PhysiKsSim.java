@@ -11,6 +11,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 import physiks.engine.PhysicsEngine;
+import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
 import physiks.geometry.Vector2D;
 import physiks.visual.RenderEngine;
@@ -34,9 +35,16 @@ public class PhysiKsSim extends BasicGame {
 		entities = new ArrayList<RigidBody>();
 
 		entities.add(PhysSimHelper.createBox(80, HEIGHT - 280, 20, 20, 1));
-		entities.get(0).setVelocity(new Vector2D(100, 0));
+		entities.get(0).setVelocity(new Vector2D(200, 0));
 		entities.add(PhysSimHelper.createBox(300, HEIGHT - 280, 20, 20, 1));
 		entities.add(PhysSimHelper.createBox(100, HEIGHT - 200, 500, 20, Float.POSITIVE_INFINITY));
+		
+		List<Vector2D> points = new ArrayList<Vector2D>();
+		points.add(new Vector2D(180, 0));
+		points.add(new Vector2D(190, 10));
+		points.add(new Vector2D(20, 200));
+		points.add(new Vector2D(0, 180));
+		entities.add(new PolyBody(600, 300, Float.POSITIVE_INFINITY, points));
 
 		physEngine = new PhysicsEngine(entities);
 		renderEngine = new RenderEngine(entities);
