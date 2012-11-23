@@ -37,27 +37,48 @@ public class PhysiKsSim extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		entities = new ArrayList<RigidBody>();
 
-		entities.add(PhysSimHelper.createBox(80, HEIGHT - 280, 20, 20, 1));
-		entities.get(0).setVelocity(new Vector2D(200, 0));
-		entities.add(PhysSimHelper.createBox(300, HEIGHT - 280, 20, 20, 1));
-		entities.add(PhysSimHelper.createBox(100, HEIGHT - 200, 500, 20, Float.POSITIVE_INFINITY));
+//		entities.add(PhysSimHelper.createBox(500, HEIGHT - 280, 20, 20, 1));
+//		entities.get(0).setVelocity(new Vector2D(150, 0));
+//		entities.add(PhysSimHelper.createBox(300, HEIGHT - 280, 20, 20, 1));
+//		entities.get(1).setVelocity(new Vector2D(180, 0));
 		
-		List<Vector2D> points = new ArrayList<Vector2D>();
-		points.add(new Vector2D(180, 0));
-		points.add(new Vector2D(190, 10));
-		points.add(new Vector2D(20, 200));
-		points.add(new Vector2D(0, 180));
-		entities.add(new PolyBody(600, 300, Float.POSITIVE_INFINITY, points));
+//		for (int i = 0; i < 9; i++) {
+//			entities.add(PhysSimHelper.createBox(0 + i * 80, HEIGHT - 280, 20, 20, 1));
+//		}
+//		entities.get(4).setVelocity(new Vector2D(100, 0));
+		
+		entities.add(PhysSimHelper.createBox(320, HEIGHT - 280, 20, 20, 1));
+		entities.get(0).setVelocity(new Vector2D(100, 0));
+		entities.add(PhysSimHelper.createBox(400, HEIGHT - 280, 20, 20, 1));
 
+		createObstacles();
+		
+		// Record the initial spatial data for use when resetting
 		initialSpatialData = new ArrayList<SpatialData>();
 		for (RigidBody entity : entities) {
 			initialSpatialData.add(new SpatialData(entity));
 		}
 		
+		// Initialize engines
 		physEngine = new PhysicsEngine(entities);
 		renderEngine = new RenderEngine(entities);
 		
 		spawnCooldown = 0;
+	}
+	
+	private void createObstacles() {
+		// Obstacles
+		entities.add(PhysSimHelper.createBox(100, HEIGHT - 200, 500, 20, Float.POSITIVE_INFINITY));
+		
+		// Diagonal obstacle
+		List<Vector2D> points = new ArrayList<Vector2D>();
+		points.add(new Vector2D(180, 0));
+		points.add(new Vector2D(190, 10));
+		points.add(new Vector2D(20, 200));
+		points.add(new Vector2D(10, 190));
+		entities.add(new PolyBody(600, 300, Float.POSITIVE_INFINITY, points));
+		
+		entities.addAll(PhysSimHelper.generateWalls());
 	}
 
 	public void update(GameContainer gameContainer, int delta) throws SlickException {

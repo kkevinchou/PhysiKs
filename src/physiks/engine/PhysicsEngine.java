@@ -15,7 +15,7 @@ import physiks.quadtree.QuadTree;
 public class PhysicsEngine {
 	private List<RigidBody> entities;
 	private QuadTree quadTree;
-	public static final float coefficientOfRestitution = 0.7f;
+	public static final float coefficientOfRestitution = 1f;
 	
 	public PhysicsEngine(List<RigidBody> entities) {
 		this.entities = entities;
@@ -24,6 +24,8 @@ public class PhysicsEngine {
 	
 	public void update(int delta) {
 		delta = Math.min(16, delta);
+		delta = 16; // This is to ensure determinism when doing testing
+		
 		float deltaInSeconds = (float)delta/1000;
 		
 		quadTree.clear();
@@ -109,7 +111,7 @@ public class PhysicsEngine {
 		Vector2D separatingAxis = SeparatingAxisTest.getSeparatingAxis(body1, body2);
 		if (separatingAxis == null) {
 			System.out.println("WTF? no separating axis after rewinding it?");
-			return null;
+			System.exit(1);
 		}
 		
 		// TODO: Make sure the collision normal is actually the normal of the closest edge.
