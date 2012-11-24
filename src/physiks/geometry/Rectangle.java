@@ -7,6 +7,7 @@ public class Rectangle {
 	public int height;
 	public int b;
 	public int c;
+	public int d;
 	
 	public Rectangle(int x, int y, int width, int height) {
 		this.x = x;
