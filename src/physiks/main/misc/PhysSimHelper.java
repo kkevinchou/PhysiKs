@@ -101,4 +101,19 @@ public abstract class PhysSimHelper {
 			entity.setAcceleration(data.getAcceleration());
 		}
 	}
+	
+	public static void createObstacles(List<RigidBody> entities) {
+		// Obstacles
+		entities.add(PhysSimHelper.createBox(100, 400, 500, 20, Float.POSITIVE_INFINITY));
+		
+		// Diagonal obstacle
+		List<Vector2D> points = new ArrayList<Vector2D>();
+		points.add(new Vector2D(180, 0));
+		points.add(new Vector2D(190, 10));
+		points.add(new Vector2D(20, 200));
+		points.add(new Vector2D(10, 190));
+		entities.add(new PolyBody(600, 300, Float.POSITIVE_INFINITY, points));
+		
+		entities.addAll(PhysSimHelper.generateWalls());
+	}
 }

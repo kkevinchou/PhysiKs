@@ -13,6 +13,7 @@ import physiks.main.PhysiKsSim;
 import physiks.quadtree.QuadTree;
 
 public class PhysicsEngine {
+	private int counter = 0;
 	private List<RigidBody> entities;
 	private QuadTree quadTree;
 	public static final float coefficientOfRestitution = 1f;
@@ -33,8 +34,20 @@ public class PhysicsEngine {
 			quadTree.add(entity);
 		}
 
+		counter++;
+		
+		if (counter == 38) {
+			int a = 5;
+			a++;
+		}
+		
 		for (RigidBody b : entities) {
 			PolyBody body = (PolyBody)b;
+			
+			if (body.getId() == 0) {
+				System.out.println(counter + " " + body.getPosition());
+			}
+			
 			performTimeStep(body, deltaInSeconds);
 		}
 	}

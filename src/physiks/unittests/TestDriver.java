@@ -14,10 +14,10 @@ public class TestDriver {
 		Test c = new QuadTreeTest();
 		Test d = new PhysUtilsTest();
 		
-		tests.add(a);
-		tests.add(b);
+//		tests.add(a);
+//		tests.add(b);
 		tests.add(c);
-		tests.add(d);
+//		tests.add(d);
 		
 		System.out.println("Starting Tests...");
 		
