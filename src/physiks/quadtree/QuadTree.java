@@ -1,10 +1,13 @@
 package physiks.quadtree;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import physiks.entities.RigidBody;
 import physiks.geometry.Rectangle;
+import physiks.geometry.Vector2D;
 
 /*
  * Labels for quad tree children:
@@ -20,11 +23,11 @@ public class QuadTree {
 	private QuadTree[] nodes;
 	private List<RigidBody> elements;
 
-	public QuadTree(int x, int y, int width, int height) {
+	public QuadTree(float x, float y, float width, float height) {
 		this(x, y, width, height, 0);
 	}
 	
-	public QuadTree(int x, int y, int width, int height, int depth) {
+	private QuadTree(float x, float y, float width, float height, int depth) {
 		elements = new ArrayList<RigidBody>();
 		dimension = new Rectangle(x, y, width, height);
 		nodes = null;
@@ -58,34 +61,41 @@ public class QuadTree {
 	public boolean intersects(RigidBody body) {
 		Rectangle boundingBox = body.getAABoundingBox();
 		
-		if (boundingBox.x > (dimension.x + dimension.width - 1)) {
+		Vector2D boxTopLeft = new Vector2D(boundingBox.x, boundingBox.y);
+		Vector2D boxBtmRight = new Vector2D(boundingBox.x + boundingBox.width - 1, boundingBox.y + boundingBox.height - 1);
+		
+		Vector2D treeTopLeft = new Vector2D(dimension.x, dimension.y);
+		Vector2D treeBtmRight = new Vector2D(dimension.x + dimension.width - 1, dimension.y + dimension.height - 1);
+		
+		if (boxTopLeft.getX() >= treeBtmRight.getX() + 1) {
 			return false;
 		}
 		
-		if ((boundingBox.x + boundingBox.width - 1) < dimension.x) {
+		if (boxTopLeft.getY() >= treeBtmRight.getY() + 1) {
 			return false;
 		}
 		
-		if (boundingBox.y > (dimension.y + dimension.height - 1)) {
+		if (treeTopLeft.getX() >= boxBtmRight.getX() + 1) {
 			return false;
 		}
 		
-		if ((boundingBox.y + boundingBox.height - 1) < dimension.y) {
+		if (treeTopLeft.getY() >= boxBtmRight.getY() + 1) {
 			return false;
 		}
 		
 		return true;
 	}
 	
-	public List<RigidBody> getIntersectionCandidates(RigidBody body) {
-		List<RigidBody> result = new ArrayList<RigidBody>();
+	private Set<RigidBody> getIntersectionCandidatesHelper(RigidBody body) {
+		Set<RigidBody> result = new HashSet<RigidBody>();
 		
 		if (nodes == null) {
-			return elements;
+			result.addAll(elements);
+			return result;
 		} else {
 			for (int i = 0; i < 4; i++) {
 				if (nodes[i].intersects(body)) {
-					result.addAll(nodes[i].getIntersectionCandidates(body));
+					result.addAll(nodes[i].getIntersectionCandidatesHelper(body));
 				}
 			}
 		}
@@ -93,11 +103,18 @@ public class QuadTree {
 		return result;
 	}
 	
+	public List<RigidBody> getIntersectionCandidates(RigidBody body) {
+		List<RigidBody> result = new ArrayList<RigidBody>();
+		result.addAll(getIntersectionCandidatesHelper(body));
+		
+		return result;
+	}
+	
 	public void split() {
 		nodes = new QuadTree[4];
 		
-		int childWidth = (int)(dimension.width / 2);
-		int childHeight = (int)(dimension.height / 2);
+		float childWidth = dimension.width / 2;
+		float childHeight = dimension.height / 2;
 		int childDepth = depth + 1;
 		
 		nodes[1] = new QuadTree(dimension.x, dimension.y, childWidth, childHeight, childDepth);

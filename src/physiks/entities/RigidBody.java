@@ -96,4 +96,12 @@ public abstract class RigidBody {
 	public void clearForces() {
 		forces.clear();
 	}
+	
+	public boolean equals(Object o) {
+		if (!(o instanceof RigidBody)) {
+			return false;
+		}
+		RigidBody body = (RigidBody)o;
+		return (id == body.getId());
+	}
 }

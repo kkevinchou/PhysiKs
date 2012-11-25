@@ -5,7 +5,6 @@ import java.util.List;
 
 import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
-import physiks.geometry.Rectangle;
 import physiks.geometry.Vector2D;
 import physiks.quadtree.QuadTree;
 
@@ -19,20 +18,8 @@ public class QuadTreeTest extends Test {
 	@Override
 	public void run() {
 		fractionalPositionTest();
-//		splitTest();
-//		basicIntersectionTest();
-//		bodyIntersectionTest();
-	}
-	
-	private void splitTest() {
-		QuadTree q = new QuadTree(0, 0, 5, 5);
-		q.split();
-		QuadTree[] nodes = q.getNodes();
-		
-		tAssert(nodes[0].getDimension(), new Rectangle(2, 0, 3, 2));
-		tAssert(nodes[1].getDimension(), new Rectangle(0, 0, 2, 2));
-		tAssert(nodes[2].getDimension(), new Rectangle(0, 2, 2, 3));
-		tAssert(nodes[3].getDimension(), new Rectangle(2, 2, 3, 3));
+		basicIntersectionTest();
+		bodyIntersectionTest();
 	}
 	
 	private void basicIntersectionTest() {
@@ -104,19 +91,19 @@ public class QuadTreeTest extends Test {
 		
 		testBody.setPosition(new Vector2D(0, 0));
 		candidates = q.getIntersectionCandidates(testBody);
-		tAssert(candidates.size(), 1);
+		tAssert(candidates.size(), 3);
 		
 		testBody.setPosition(new Vector2D(0, 2));
 		candidates = q.getIntersectionCandidates(testBody);
-		tAssert(candidates.size(), 1);
+		tAssert(candidates.size(), 3);
 		
 		testBody.setPosition(new Vector2D(1, 0));
 		candidates = q.getIntersectionCandidates(testBody);
-		tAssert(candidates.size(), 2);
+		tAssert(candidates.size(), 3);
 		
 		testBody.setPosition(new Vector2D(1, 2));
 		candidates = q.getIntersectionCandidates(testBody);
-		tAssert(candidates.size(), 3);
+		tAssert(candidates.size(), 5);
 		
 		testBody.setPosition(new Vector2D(1, 1));
 		candidates = q.getIntersectionCandidates(testBody);

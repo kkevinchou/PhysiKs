@@ -50,10 +50,10 @@ public class PolyBody extends RigidBody {
 	}
 	
 	public Rectangle getAABoundingBox() {
-		int maxX = Integer.MIN_VALUE;
-		int maxY = Integer.MIN_VALUE;
-		int minX = Integer.MAX_VALUE;
-		int minY = Integer.MAX_VALUE;
+		float maxX = Integer.MIN_VALUE;
+		float maxY = Integer.MIN_VALUE;
+		float minX = Integer.MAX_VALUE;
+		float minY = Integer.MAX_VALUE;
 		
 		
 		for (Vector2D point : getPoints()) {
@@ -61,23 +61,22 @@ public class PolyBody extends RigidBody {
 			float y = point.getY();
 			
 			if (x > maxX) {
-				maxX = (int)x;
-			}
-			
-			if (x < minX) {
-				minX = (int)x;
+				maxX = x;
+			} else if (x < minX) {
+				minX = x;
 			}
 			
 			if (y > maxY) {
-				maxY = (int)y;
-			}
-			
-			if (y < minY) {
-				minY = (int)y;
+				maxY = y;
+			} else if (y < minY) {
+				minY = y;
 			}
 		}
 		
-		return new Rectangle(minX, minY, maxX - minX + 1, maxY - minY + 1);
+		float boundingBoxWidth = maxX - minX + 1;
+		float boundingBoxHeight = maxY - minY + 1;
+		
+		return new Rectangle(minX, minY, boundingBoxWidth, boundingBoxHeight);
 	}
 	
 	public List<Vector2D> getPoints() {

@@ -1,28 +1,16 @@
 package physiks.geometry;
 
 public class Rectangle {	
-	public int x;
-	public int y;
-	public int width;
-	public int height;
-	public int b;
-	public int c;
-	public int d;
+	public float x;
+	public float y;
+	public float width;
+	public float height;
 	
-	public Rectangle(int x, int y, int width, int height) {
+	public Rectangle(float x, float y, float width, float height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-	}
-
-	public boolean pointIntersects(Vector2D point, Rectangle target) {
-		if ((point.getX() >= target.x) && (point.getX() <= target.x + target.width)) {
-			if ((point.getY() >= target.y) && (point.getY() <= target.y + target.height)) {
-				return true;
-			}
-		}
-		return false;	
 	}
 	
 	public boolean equals(Object o) {
