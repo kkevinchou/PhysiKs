@@ -2,6 +2,7 @@ package physiks.engine;
 
 import java.util.List;
 
+import physiks.audio.AudioPlayer;
 import physiks.collision.SeparatingAxisTest;
 import physiks.engine.misc.PhysHelper;
 import physiks.engine.misc.SpatialData;
@@ -13,7 +14,6 @@ import physiks.main.PhysiKsSim;
 import physiks.quadtree.QuadTree;
 
 public class PhysicsEngine {
-	private int counter = 0;
 	private List<RigidBody> entities;
 	private QuadTree quadTree;
 	public static final float coefficientOfRestitution = 1f;
@@ -33,21 +33,9 @@ public class PhysicsEngine {
 		for (RigidBody entity : entities) {
 			quadTree.add(entity);
 		}
-
-		counter++;
-		
-		if (counter == 38) {
-			int a = 5;
-			a++;
-		}
 		
 		for (RigidBody b : entities) {
 			PolyBody body = (PolyBody)b;
-			
-			if (body.getId() == 0) {
-				System.out.println(counter + " " + body.getPosition());
-			}
-			
 			performTimeStep(body, deltaInSeconds);
 		}
 	}
@@ -61,7 +49,8 @@ public class PhysicsEngine {
 		List<RigidBody> collisionCandidates = quadTree.getIntersectionCandidates(body);
 		for (RigidBody target : collisionCandidates) {
 			if (collidesWidth(body, target)) {
-				resolveCollision(body, target, prevSpatialData);				
+				resolveCollision(body, target, prevSpatialData);
+				AudioPlayer.getInstance().playWav("bounce");
 			}
 		}
 	}

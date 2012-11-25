@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.openal.AL;
+import org.lwjgl.opengl.Display;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -12,7 +14,6 @@ import org.newdawn.slick.SlickException;
 
 import physiks.engine.PhysicsEngine;
 import physiks.engine.misc.SpatialData;
-import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
 import physiks.geometry.Vector2D;
 import physiks.main.misc.PhysSimHelper;
@@ -61,6 +62,8 @@ public class PhysiKsSim extends BasicGame {
 		physEngine.update(delta);
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+			Display.destroy();
+			AL.destroy();
 			System.exit(0);
 		}
 		
