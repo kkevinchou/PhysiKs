@@ -38,8 +38,9 @@ public class PhysiKsSim extends BasicGame {
 		entities = new ArrayList<RigidBody>();
 		
 		entities.add(PhysSimHelper.createBox(320, HEIGHT - 280, 20, 20, 1));
-		entities.get(0).setVelocity(new Vector2D(100, 0));
+		entities.get(0).setVelocity(new Vector2D(300, 0));
 		entities.add(PhysSimHelper.createBox(400, HEIGHT - 280, 20, 20, 1));
+		entities.get(1).setVelocity(new Vector2D(-300, 0));
 
 		PhysSimHelper.createObstacles(entities);
 		

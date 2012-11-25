@@ -1,6 +1,5 @@
 package physiks.unittests.tests;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import physiks.entities.PolyBody;

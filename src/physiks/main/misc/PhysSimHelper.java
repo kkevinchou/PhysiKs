@@ -105,6 +105,7 @@ public abstract class PhysSimHelper {
 	public static void createObstacles(List<RigidBody> entities) {
 		// Obstacles
 		entities.add(PhysSimHelper.createBox(100, 400, 500, 20, Float.POSITIVE_INFINITY));
+		entities.add(PhysSimHelper.createBox(100, 200, 500, 20, Float.POSITIVE_INFINITY));
 		
 		// Diagonal obstacle
 		List<Vector2D> points = new ArrayList<Vector2D>();
