@@ -14,7 +14,7 @@ public class Logger {
 		return instance;
 	}
 	
-	private Logger() {
+	public void init() {
 		buffer = new StringBuffer();
 		 
 		try {
@@ -23,6 +23,9 @@ public class Logger {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private Logger() {
 	}
 	
 	public void buffer(String str) {

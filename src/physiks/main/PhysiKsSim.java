@@ -41,8 +41,7 @@ public class PhysiKsSim extends BasicGame {
 		entities = new ArrayList<RigidBody>();
 		
 		entities.add(PhysSimHelper.createBox(320, HEIGHT - 280, 20, 20, 1));
-		entities.get(0).setPosition(new Vector2D(587.4563f, 432.383f));
-		entities.get(0).setVelocity(new Vector2D(65.79889f, 776.3369f));
+		entities.get(0).setVelocity(new Vector2D(500, 0));
 //		entities.add(PhysSimHelper.createBox(400, HEIGHT - 280, 20, 20, 1));
 //		entities.get(1).setVelocity(new Vector2D(-300, 0));
 
@@ -59,7 +58,7 @@ public class PhysiKsSim extends BasicGame {
 		renderEngine = new RenderEngine(entities);
 		
 		spawnCooldown = 0;
-		AudioPlayer.getInstance().setSoundsEnabled(false);
+		AudioPlayer.getInstance().setSoundsEnabled(true);
 		
 //		int count = 165900;
 //		while (count-- > 0) {
