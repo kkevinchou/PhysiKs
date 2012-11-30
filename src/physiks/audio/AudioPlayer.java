@@ -10,7 +10,8 @@ import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
 public class AudioPlayer {
-	private final String audioResourcesFolderPath = "resources/audio";
+	private boolean enabled = true;
+	private static final String audioResourcesFolderPath = "resources/audio";
 	private static AudioPlayer instance = new AudioPlayer();
 	Map<String, Audio> audioMap;
 
@@ -51,11 +52,20 @@ public class AudioPlayer {
 	}
 
 	public void playWav(String fileName) {
+		if (!enabled) {
+			return;
+		}
+		
 		Audio audio = audioMap.get(fileName);
+		
 		if (audio != null) {
 			audio.playAsSoundEffect(1f, 0.5f, false);
 		} else {
 			System.out.println("Audio file: " + fileName + " was not loaded");
 		}
+	}
+	
+	public void setSoundsEnabled(boolean enabled) {
+		this.enabled = enabled; 
 	}
 }

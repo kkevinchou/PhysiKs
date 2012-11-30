@@ -1,7 +1,7 @@
 package physiks.quadtree;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -87,7 +87,7 @@ public class QuadTree {
 	}
 	
 	private Set<RigidBody> getIntersectionCandidatesHelper(RigidBody body) {
-		Set<RigidBody> result = new HashSet<RigidBody>();
+		Set<RigidBody> result = new LinkedHashSet<RigidBody>();
 		
 		if (nodes == null) {
 			result.addAll(elements);

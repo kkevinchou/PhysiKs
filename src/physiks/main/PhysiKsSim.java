@@ -12,11 +12,13 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
+import physiks.audio.AudioPlayer;
 import physiks.engine.PhysicsEngine;
 import physiks.engine.misc.SpatialData;
 import physiks.entities.RigidBody;
 import physiks.geometry.Vector2D;
 import physiks.main.misc.PhysSimHelper;
+import physiks.util.Debug;
 import physiks.visual.RenderEngine;
 
 public class PhysiKsSim extends BasicGame {
@@ -39,9 +41,10 @@ public class PhysiKsSim extends BasicGame {
 		entities = new ArrayList<RigidBody>();
 		
 		entities.add(PhysSimHelper.createBox(320, HEIGHT - 280, 20, 20, 1));
-		entities.get(0).setVelocity(new Vector2D(300, 0));
-		entities.add(PhysSimHelper.createBox(400, HEIGHT - 280, 20, 20, 1));
-		entities.get(1).setVelocity(new Vector2D(-300, 0));
+		entities.get(0).setPosition(new Vector2D(587.4563f, 432.383f));
+		entities.get(0).setVelocity(new Vector2D(65.79889f, 776.3369f));
+//		entities.add(PhysSimHelper.createBox(400, HEIGHT - 280, 20, 20, 1));
+//		entities.get(1).setVelocity(new Vector2D(-300, 0));
 
 		PhysSimHelper.createObstacles(entities);
 		
@@ -56,6 +59,12 @@ public class PhysiKsSim extends BasicGame {
 		renderEngine = new RenderEngine(entities);
 		
 		spawnCooldown = 0;
+		AudioPlayer.getInstance().setSoundsEnabled(false);
+		
+//		int count = 165900;
+//		while (count-- > 0) {
+//			physEngine.update(16);
+//		}
 	}
 
 	public void update(GameContainer gameContainer, int delta) throws SlickException {
