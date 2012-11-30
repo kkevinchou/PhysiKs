@@ -12,7 +12,6 @@ import physiks.forces.*;
 import physiks.geometry.Vector2D;
 import physiks.main.PhysiKsSim;
 import physiks.quadtree.QuadTree;
-import physiks.util.Logger;
 
 public class PhysicsEngine {
 	private int frameNumber = 0;
@@ -47,7 +46,6 @@ public class PhysicsEngine {
 		
 		String logOutput = frameNumber++ + " " + entities.get(0).getPosition() + " " + entities.get(0).getVelocity() + " " + entities.get(0).getAcceleration();
 		System.out.println(logOutput);
-		Logger.getInstance().buffer(logOutput);
 	}
 	
 	private void performTimeStep(RigidBody body, float delta) {
@@ -123,8 +121,6 @@ public class PhysicsEngine {
 		Vector2D separatingAxis = SeparatingAxisTest.getSeparatingAxis(body1, body2);
 		if (separatingAxis == null) {
 			System.out.println("WTF? no separating axis after rewinding it?");
-			Logger.getInstance().dump();
-			Logger.getInstance().close();
 			System.exit(1);
 		}
 		
