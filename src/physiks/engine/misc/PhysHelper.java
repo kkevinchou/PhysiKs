@@ -120,20 +120,12 @@ public abstract class PhysHelper {
 	public static float calculateImpulseMagnitude(RigidBody body1, RigidBody body2, Vector2D collisionNormal) {
 		// Formula and explanation: http://chrishecker.com/images/e/e7/Gdmphys3.pdf
 		
-		// Assumption, collision normal is always pointing in the opposite
-		// direction of the velocity
+		Vector2D closingVelocity = body1.getVelocity().sub(body2.getVelocity());
 		
-		float b1VelocityMagnitudeAlongCollisionNormal = Math.abs(body1.getVelocity().normalizedProjection(collisionNormal));
-		Vector2D b1VelocityAlongCollisionNormal = collisionNormal.mult(-1 * b1VelocityMagnitudeAlongCollisionNormal);
-		
-		float b2VelocityMagnitudeAlongCollisionNormal = Math.abs(body2.getVelocity().normalizedProjection(collisionNormal));
-		Vector2D b2VelocityAlongCollisionNormal = collisionNormal.mult(b2VelocityMagnitudeAlongCollisionNormal);
-		
-		Vector2D closingVelocityAlongCollisionNormal = b1VelocityAlongCollisionNormal.sub(b2VelocityAlongCollisionNormal);
 		float combinedInverseMass = (1 / body1.getMass()) + (1 / body2.getMass());
 		
 		float impulse = -(1 + PhysicsEngine.coefficientOfRestitution);
-		impulse = impulse * closingVelocityAlongCollisionNormal.dot(collisionNormal);
+		impulse = impulse * closingVelocity.dot(collisionNormal);
 		impulse = impulse / collisionNormal.dot(collisionNormal);
 		impulse = impulse / (combinedInverseMass);
 		

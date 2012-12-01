@@ -17,7 +17,7 @@ public class PhysicsEngine {
 	private int frameNumber = 0;
 	private List<RigidBody> entities;
 	private QuadTree quadTree;
-	public static final float coefficientOfRestitution = 1f;
+	public static final float coefficientOfRestitution = 0.9f;
 	
 	public PhysicsEngine(List<RigidBody> entities) {
 		this.entities = entities;
@@ -44,8 +44,8 @@ public class PhysicsEngine {
 			frameNumber = 72086;
 		}
 		
-		String logOutput = frameNumber++ + " " + entities.get(0).getPosition() + " " + entities.get(0).getVelocity() + " " + entities.get(0).getAcceleration();
-		System.out.println(logOutput);
+//		String logOutput = frameNumber++ + " " + entities.get(0).getPosition() + " " + entities.get(0).getVelocity() + " " + entities.get(0).getAcceleration();
+//		System.out.println(logOutput);
 	}
 	
 	private void performTimeStep(RigidBody body, float delta) {
@@ -102,9 +102,9 @@ public class PhysicsEngine {
 		
 		body.setPosition(body.getPosition().add(separatingVector));
 		
-		float impulse = PhysHelper.calculateImpulseMagnitude(body, target, collisionNormal);
+		float impulseMagnitude = PhysHelper.calculateImpulseMagnitude(body, target, collisionNormal);
+		Vector2D impulseVector = collisionNormal.mult(impulseMagnitude);
 		
-		Vector2D impulseVector = collisionNormal.mult(impulse);
 		body.setVelocity(body.getVelocity().add(impulseVector.div(body.getMass())));
 		target.setVelocity(target.getVelocity().sub(impulseVector.div(target.getMass())));
 	}

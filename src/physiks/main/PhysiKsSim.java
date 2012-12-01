@@ -18,7 +18,6 @@ import physiks.engine.misc.SpatialData;
 import physiks.entities.RigidBody;
 import physiks.geometry.Vector2D;
 import physiks.main.misc.PhysSimHelper;
-import physiks.util.Debug;
 import physiks.visual.RenderEngine;
 
 public class PhysiKsSim extends BasicGame {
@@ -41,7 +40,7 @@ public class PhysiKsSim extends BasicGame {
 		entities = new ArrayList<RigidBody>();
 		
 		entities.add(PhysSimHelper.createBox(320, HEIGHT - 280, 20, 20, 1));
-		entities.get(0).setVelocity(new Vector2D(500, 0));
+		entities.get(0).setVelocity(new Vector2D(0, 0));
 //		entities.add(PhysSimHelper.createBox(400, HEIGHT - 280, 20, 20, 1));
 //		entities.get(1).setVelocity(new Vector2D(-300, 0));
 
@@ -58,12 +57,13 @@ public class PhysiKsSim extends BasicGame {
 		renderEngine = new RenderEngine(entities);
 		
 		spawnCooldown = 0;
-		AudioPlayer.getInstance().setSoundsEnabled(true);
+		AudioPlayer.getInstance().setSoundsEnabled(false);
 		
-//		int count = 165900;
-//		while (count-- > 0) {
-//			physEngine.update(16);
-//		}
+		int count = 100000;
+		while (count-- > 0) {
+			physEngine.update(16);
+			System.out.println(count + " " + entities.get(0).getVelocity().magnitude());
+		}
 	}
 
 	public void update(GameContainer gameContainer, int delta) throws SlickException {
