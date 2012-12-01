@@ -59,11 +59,11 @@ public class PhysiKsSim extends BasicGame {
 		spawnCooldown = 0;
 		AudioPlayer.getInstance().setSoundsEnabled(false);
 		
-		int count = 100000;
-		while (count-- > 0) {
-			physEngine.update(16);
-			System.out.println(count + " " + entities.get(0).getVelocity().magnitude());
-		}
+//		int count = 100000;
+//		while (count-- > 0) {
+//			physEngine.update(16);
+//			System.out.println(count + " " + entities.get(0).getVelocity().magnitude());
+//		}
 	}
 
 	public void update(GameContainer gameContainer, int delta) throws SlickException {

@@ -16,22 +16,23 @@ import physiks.geometry.Vector2D;
  */
 
 public class QuadTree {
-	private int maxChildren = 4;
+	private int maxChildren;
 	private int maxDepth = 4;
 	private int depth;
 	private Rectangle dimension;
 	private QuadTree[] nodes;
 	private List<RigidBody> elements;
 
-	public QuadTree(float x, float y, float width, float height) {
-		this(x, y, width, height, 0);
+	public QuadTree(float x, float y, float width, float height, int maxChildren) {
+		this(x, y, width, height, 0, maxChildren);
 	}
 	
-	private QuadTree(float x, float y, float width, float height, int depth) {
+	private QuadTree(float x, float y, float width, float height, int depth, int maxChildren) {
 		elements = new ArrayList<RigidBody>();
 		dimension = new Rectangle(x, y, width, height);
 		nodes = null;
 		this.depth = depth;
+		this.maxChildren = maxChildren;
 	}
 	
 	public Rectangle getDimension() {

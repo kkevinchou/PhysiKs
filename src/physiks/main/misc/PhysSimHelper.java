@@ -3,6 +3,8 @@ package physiks.main.misc;
 import java.util.ArrayList;
 import java.util.List;
 
+import physiks.collision.SeparatingAxisTest;
+import physiks.engine.misc.PhysHelper;
 import physiks.engine.misc.SpatialData;
 import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
@@ -75,16 +77,42 @@ public abstract class PhysSimHelper {
 		
 		List<RigidBody> entities = new ArrayList<RigidBody>();
 		
-		for (int i = 0; i < 20; i++) {
-			float xPos = (float)Math.random() * xSpread + x - xSpread / 2;
-			float yPos = (float)Math.random() * ySpread + (PhysiKsSim.HEIGHT - y) - ySpread / 2;
+		for (int i = 0; i < 1; i++) {
+//			float xPos = (float)Math.random() * xSpread + x - xSpread / 2;
+//			float yPos = (float)Math.random() * ySpread + (PhysiKsSim.HEIGHT - y) - ySpread / 2;
+			float xPos = x;
+			float yPos = PhysiKsSim.HEIGHT - y;
 			
-			if (i % 2 == 3) {
+			if (i % 2 == i % 2) {
 				body = createBox(xPos, yPos, width, height, mass);
 			} else {
 				body = createDiamond(xPos, yPos, width, height, mass);
 			}
+			
+			for (RigidBody entity : entities) {
+				PolyBody p1 = (PolyBody)entity;
+				PolyBody p2 = (PolyBody)body;
+				
+				if (SeparatingAxisTest.getSeparatingAxis(p1, p2) == null) {
+					List<Vector2D> normals = new ArrayList<Vector2D>();
+					normals.addAll(p1.getNormals());
+					normals.addAll(p2.getNormals());
 
+					float minOverlap = Float.POSITIVE_INFINITY;
+					Vector2D minSeparatingVector = Vector2D.ZERO;
+					
+					for (Vector2D normal : normals) {
+						float overlap = PhysHelper.overlapAlongAxis(p1, p2, normal);
+						if (overlap < minOverlap) {
+							minOverlap = overlap;
+							minSeparatingVector = normal.perpendicular().pointAlongWith(p1.getCenter().sub(p2.getCenter()));
+						}
+					}
+					minSeparatingVector = minSeparatingVector.mult(minOverlap);
+					body.setPosition(body.getPosition().add(minSeparatingVector));
+				}
+			}
+			
 			entities.add(body);
 		}
 		

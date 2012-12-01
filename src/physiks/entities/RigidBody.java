@@ -11,10 +11,9 @@ import physiks.util.IntGenerator;
 import physiks.visual.DaVinci;
 import physiks.visual.VisualData;
 
-
-
 public abstract class RigidBody {
 	private float mass;
+	private Vector2D center;
 	private Vector2D position;
 	private Vector2D velocity;
 	private Vector2D acceleration;
@@ -31,6 +30,7 @@ public abstract class RigidBody {
 	
 	public RigidBody(float x, float y, float mass) {
 		this.mass = mass;
+		center = null;
 		position = new Vector2D(x, y);
 		velocity = new Vector2D(0, 0);
 		acceleration = new Vector2D(0, 0);
@@ -43,6 +43,14 @@ public abstract class RigidBody {
 	
 	public int getId() {
 		return id;
+	}
+	
+	public Vector2D getCenter() {
+		return center;
+	}
+
+	public void setCenter(Vector2D center) {
+		this.center = center;
 	}
 
 	public Vector2D getPosition() {

@@ -9,7 +9,6 @@ import physiks.geometry.Vector2D;
 public class PolyBody extends RigidBody {
 	List<Vector2D> normals;
 	List<Vector2D> points;
-	Vector2D center;
 	
 	public PolyBody(float x, float y, float width, float height) {
 		super(x, y, 1);
@@ -26,20 +25,20 @@ public class PolyBody extends RigidBody {
 		
 		normals = new ArrayList<Vector2D>();
 		this.points = new ArrayList<Vector2D>();
-		center = Vector2D.ZERO;
+		setCenter(Vector2D.ZERO);
 		
 		for (Vector2D point : points) {
-			center = center.add(point);
+			setCenter(getCenter().add(point));
 			this.points.add(point);
 		}
-		center = center.div(points.size());
+		setCenter(getCenter().div(points.size()));
 		
 		for (int i = 0, size = points.size(); i < size; i++) {
 			Vector2D a = points.get(i);
 			Vector2D b = points.get((i + 1) % size);
 			
 			Vector2D normal = b.sub(a).perpendicular().normalize();
-			if (normal.normalizedProjection(a.sub(center)) > 0) {
+			if (normal.normalizedProjection(a.sub(getCenter())) > 0) {
 				// Normal faces outward from center, add it to our normals list
 				normals.add(normal);
 			} else {
