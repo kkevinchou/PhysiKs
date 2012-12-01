@@ -17,7 +17,7 @@ public class PhysicsEngine {
 	private int frameNumber = 0;
 	private List<RigidBody> entities;
 	private QuadTree quadTree;
-	public static final float coefficientOfRestitution = 0.9f;
+	public static final float coefficientOfRestitution = 0.7f;
 	
 	public PhysicsEngine(List<RigidBody> entities) {
 		this.entities = entities;
