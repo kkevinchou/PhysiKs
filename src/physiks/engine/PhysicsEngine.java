@@ -35,13 +35,8 @@ public class PhysicsEngine {
 			quadTree.add(entity);
 		}
 		
-		for (RigidBody b : entities) {
-			PolyBody body = (PolyBody)b;
-			performTimeStep(body, deltaInSeconds);
-		}
-		
-		if (frameNumber == 72086) {
-			frameNumber = 72086;
+		for (RigidBody entity : entities) {
+			performTimeStep(entity, deltaInSeconds);
 		}
 		
 //		String logOutput = frameNumber++ + " " + entities.get(0).getPosition() + " " + entities.get(0).getVelocity() + " " + entities.get(0).getAcceleration();
@@ -97,8 +92,12 @@ public class PhysicsEngine {
 		PolyBody body = (PolyBody)a;
 		PolyBody target = (PolyBody)b;
 		
-		Vector2D collisionNormal = calculateCollisionNormal(body, target, prevSpatialData);
-		Vector2D separatingVector = calculateSeparatingVector(body, target, collisionNormal);
+//		Vector2D collisionNormal = calculateCollisionNormal(body, target, prevSpatialData);
+//		Vector2D separatingVector = calculateSeparatingVector(body, target, collisionNormal);
+		
+		// testing
+		Vector2D separatingVector = PhysHelper.calculateMinimumSeparatingVector(body, target);
+		Vector2D collisionNormal = separatingVector.normalize();
 		
 		body.setPosition(body.getPosition().add(separatingVector));
 		
@@ -109,7 +108,7 @@ public class PhysicsEngine {
 		target.setVelocity(target.getVelocity().sub(impulseVector.div(target.getMass())));
 	}
 	
-	public static Vector2D calculateCollisionNormal(RigidBody a, RigidBody b, SpatialData prevSpatialData) {
+	private Vector2D calculateCollisionNormal(RigidBody a, RigidBody b, SpatialData prevSpatialData) {
 		PolyBody body1 = (PolyBody)a;
 		PolyBody body2 = (PolyBody)b;
 		
@@ -120,6 +119,13 @@ public class PhysicsEngine {
 		
 		Vector2D separatingAxis = SeparatingAxisTest.getSeparatingAxis(body1, body2);
 		if (separatingAxis == null) {
+//			Vector2D minSeparatingVector = PhysHelper.getMinimumSeparatingVector(body1, body2);
+//			Vector2D safePosition = body1.getPosition().add(minSeparatingVector);
+//			
+//			prevSpatialData.setPosition(safePosition);
+//			body1.setPosition(safePosition);
+//			separatingAxis = SeparatingAxisTest.getSeparatingAxis(body1, body2);
+			
 			System.out.println("WTF? no separating axis after rewinding it?");
 			System.exit(1);
 		}

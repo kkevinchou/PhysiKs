@@ -75,48 +75,24 @@ public abstract class PhysSimHelper {
 		
 		RigidBody body;
 		
-		List<RigidBody> entities = new ArrayList<RigidBody>();
+		List<RigidBody> newEntities = new ArrayList<RigidBody>();
 		
-		for (int i = 0; i < 1; i++) {
-//			float xPos = (float)Math.random() * xSpread + x - xSpread / 2;
-//			float yPos = (float)Math.random() * ySpread + (PhysiKsSim.HEIGHT - y) - ySpread / 2;
-			float xPos = x;
-			float yPos = PhysiKsSim.HEIGHT - y;
+		for (int i = 0; i < 20; i++) {
+			float xPos = (float)Math.random() * xSpread + x - xSpread / 2;
+			float yPos = (float)Math.random() * ySpread + (PhysiKsSim.HEIGHT - y) - ySpread / 2;
+//			float xPos = x;
+//			float yPos = PhysiKsSim.HEIGHT - y;
 			
-			if (i % 2 == i % 2) {
+			if (i % 2 == 3) {
 				body = createBox(xPos, yPos, width, height, mass);
 			} else {
 				body = createDiamond(xPos, yPos, width, height, mass);
 			}
 			
-			for (RigidBody entity : entities) {
-				PolyBody p1 = (PolyBody)entity;
-				PolyBody p2 = (PolyBody)body;
-				
-				if (SeparatingAxisTest.getSeparatingAxis(p1, p2) == null) {
-					List<Vector2D> normals = new ArrayList<Vector2D>();
-					normals.addAll(p1.getNormals());
-					normals.addAll(p2.getNormals());
-
-					float minOverlap = Float.POSITIVE_INFINITY;
-					Vector2D minSeparatingVector = Vector2D.ZERO;
-					
-					for (Vector2D normal : normals) {
-						float overlap = PhysHelper.overlapAlongAxis(p1, p2, normal);
-						if (overlap < minOverlap) {
-							minOverlap = overlap;
-							minSeparatingVector = normal.perpendicular().pointAlongWith(p1.getCenter().sub(p2.getCenter()));
-						}
-					}
-					minSeparatingVector = minSeparatingVector.mult(minOverlap);
-					body.setPosition(body.getPosition().add(minSeparatingVector));
-				}
-			}
-			
-			entities.add(body);
+			newEntities.add(body);
 		}
 		
-		return entities;
+		return newEntities;
 	}
 	
 	public static void reset(List<RigidBody> entities, List<SpatialData> spatialData) {
@@ -132,8 +108,8 @@ public abstract class PhysSimHelper {
 	
 	public static void createObstacles(List<RigidBody> entities) {
 		// Obstacles
-		entities.add(PhysSimHelper.createBox(100, 400, 500, 20, Float.POSITIVE_INFINITY));
-		entities.add(PhysSimHelper.createBox(100, 200, 500, 20, Float.POSITIVE_INFINITY));
+//		entities.add(PhysSimHelper.createBox(100, 400, 500, 20, Float.POSITIVE_INFINITY));
+//		entities.add(PhysSimHelper.createBox(100, 200, 500, 20, Float.POSITIVE_INFINITY));
 		
 		// Diagonal obstacle
 		List<Vector2D> points = new ArrayList<Vector2D>();
@@ -141,7 +117,7 @@ public abstract class PhysSimHelper {
 		points.add(new Vector2D(190, 10));
 		points.add(new Vector2D(20, 200));
 		points.add(new Vector2D(10, 190));
-		entities.add(new PolyBody(600, 300, Float.POSITIVE_INFINITY, points));
+//		entities.add(new PolyBody(600, 300, Float.POSITIVE_INFINITY, points));
 		
 		entities.addAll(PhysSimHelper.generateWalls());
 	}

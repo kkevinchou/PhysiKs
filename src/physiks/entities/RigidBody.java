@@ -46,7 +46,7 @@ public abstract class RigidBody {
 	}
 	
 	public Vector2D getCenter() {
-		return center;
+		return center.add(position);
 	}
 
 	public void setCenter(Vector2D center) {

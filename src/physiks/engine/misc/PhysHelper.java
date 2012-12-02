@@ -3,6 +3,7 @@ package physiks.engine.misc;
 import java.util.ArrayList;
 import java.util.List;
 
+import physiks.collision.SeparatingAxisTest;
 import physiks.engine.PhysicsEngine;
 import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
@@ -150,5 +151,34 @@ public abstract class PhysHelper {
 		}
 		
 		return distance;
+	}
+	
+	/**
+	 * @param a
+	 * @param b
+	 * @return minimum separating vector, a zero vector is returned if the two bodies are not intersecting
+	 */
+	public static Vector2D calculateMinimumSeparatingVector(RigidBody a, RigidBody b) {
+		PolyBody p1 = (PolyBody)a;
+		PolyBody p2 = (PolyBody)b;
+
+		float minOverlap = Float.POSITIVE_INFINITY;
+		Vector2D minSeparatingVector = Vector2D.ZERO;
+		
+		if (SeparatingAxisTest.getSeparatingAxis(p1, p2) == null) {
+			List<Vector2D> normals = new ArrayList<Vector2D>();
+			normals.addAll(p1.getNormals());
+			normals.addAll(p2.getNormals());
+			
+			for (Vector2D normal : normals) {
+				float overlap = PhysHelper.overlapAlongAxis(p1, p2, normal);
+				if (overlap < minOverlap) {
+					minOverlap = overlap;
+					minSeparatingVector = normal.mult(minOverlap).pointAlongWith(p1.getCenter().sub(p2.getCenter()));
+				}
+			}
+		}
+
+		return minSeparatingVector;
 	}
 }

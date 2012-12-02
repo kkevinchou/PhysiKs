@@ -25,20 +25,20 @@ public class PolyBody extends RigidBody {
 		
 		normals = new ArrayList<Vector2D>();
 		this.points = new ArrayList<Vector2D>();
-		setCenter(Vector2D.ZERO);
+		Vector2D center = Vector2D.ZERO;
 		
 		for (Vector2D point : points) {
-			setCenter(getCenter().add(point));
+			center.add(point);
 			this.points.add(point);
 		}
-		setCenter(getCenter().div(points.size()));
+		setCenter(center.div(points.size()));
 		
 		for (int i = 0, size = points.size(); i < size; i++) {
 			Vector2D a = points.get(i);
 			Vector2D b = points.get((i + 1) % size);
 			
 			Vector2D normal = b.sub(a).perpendicular().normalize();
-			if (normal.normalizedProjection(a.sub(getCenter())) > 0) {
+			if (normal.pointsInSameDirection(a.sub(getCenter()))) {
 				// Normal faces outward from center, add it to our normals list
 				normals.add(normal);
 			} else {
