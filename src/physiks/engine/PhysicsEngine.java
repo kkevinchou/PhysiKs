@@ -20,7 +20,7 @@ public class PhysicsEngine {
 	
 	public PhysicsEngine(List<RigidBody> entities) {
 		this.entities = entities;
-		quadTree = new QuadTree(-PhysiKsSim.WIDTH, -PhysiKsSim.HEIGHT, PhysiKsSim.WIDTH*3, PhysiKsSim.HEIGHT*3, 4);
+		quadTree = new QuadTree(-PhysiKsSim.WIDTH, -PhysiKsSim.HEIGHT, PhysiKsSim.WIDTH*3, PhysiKsSim.HEIGHT*3, 4000);
 	}
 	
 	public void update(int delta) {
