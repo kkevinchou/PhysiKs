@@ -14,14 +14,13 @@ import physiks.main.PhysiKsSim;
 import physiks.quadtree.QuadTree;
 
 public class PhysicsEngine {
-	private int frameNumber = 0;
 	private List<RigidBody> entities;
 	private QuadTree quadTree;
 	public static final float coefficientOfRestitution = 0.7f;
 	
 	public PhysicsEngine(List<RigidBody> entities) {
 		this.entities = entities;
-		quadTree = new QuadTree(-PhysiKsSim.WIDTH, -PhysiKsSim.HEIGHT, PhysiKsSim.WIDTH*3, PhysiKsSim.HEIGHT*3, 1000);
+		quadTree = new QuadTree(-PhysiKsSim.WIDTH, -PhysiKsSim.HEIGHT, PhysiKsSim.WIDTH*3, PhysiKsSim.HEIGHT*3, 4);
 	}
 	
 	public void update(int delta) {

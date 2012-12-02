@@ -118,11 +118,11 @@ public class QuadTree {
 		float childHeight = dimension.height / 2;
 		int childDepth = depth + 1;
 		
-		nodes[1] = new QuadTree(dimension.x, dimension.y, childWidth, childHeight, childDepth);
-		nodes[0] = new QuadTree(dimension.x + childWidth, dimension.y, dimension.width - childWidth, childHeight, childDepth);
+		nodes[1] = new QuadTree(dimension.x, dimension.y, childWidth, childHeight, childDepth, maxChildren);
+		nodes[0] = new QuadTree(dimension.x + childWidth, dimension.y, dimension.width - childWidth, childHeight, childDepth, maxChildren);
 		
-		nodes[2] = new QuadTree(dimension.x, dimension.y + childHeight, childWidth, dimension.height - childHeight, childDepth);
-		nodes[3] = new QuadTree(dimension.x + childWidth, dimension.y + childHeight, dimension.width - childWidth, dimension.height - childHeight, childDepth);
+		nodes[2] = new QuadTree(dimension.x, dimension.y + childHeight, childWidth, dimension.height - childHeight, childDepth, maxChildren);
+		nodes[3] = new QuadTree(dimension.x + childWidth, dimension.y + childHeight, dimension.width - childWidth, dimension.height - childHeight, childDepth, maxChildren);
 		
 		for (RigidBody element : elements) {
 			for (int i = 0; i < 4; i++) {
