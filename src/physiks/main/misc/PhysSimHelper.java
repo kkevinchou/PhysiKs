@@ -3,8 +3,6 @@ package physiks.main.misc;
 import java.util.ArrayList;
 import java.util.List;
 
-import physiks.collision.SeparatingAxisTest;
-import physiks.engine.misc.PhysHelper;
 import physiks.engine.misc.SpatialData;
 import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
