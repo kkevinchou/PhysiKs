@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.openal.AL;
+import org.lwjgl.opengl.Display;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -16,6 +18,7 @@ import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
 import physiks.forces.Gravity;
 import physiks.geometry.Vector2D;
+import physiks.main.misc.PhysSimHelper;
 
 
 
@@ -81,6 +84,12 @@ public class PhysiKsSim extends BasicGame {
 	public void update(GameContainer gameContainer, int delta) throws SlickException {
 		physEngine.update(delta);
 		
+		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+			Display.destroy();
+			AL.destroy();
+			System.exit(0);
+		}
+		
 		spawnCooldown += delta;
 		if (Mouse.isButtonDown(0)) {
 			spawn(Mouse.getX(), Mouse.getY());
@@ -93,51 +102,7 @@ public class PhysiKsSim extends BasicGame {
 		}
 		spawnCooldown = 0;
 		
-		spawnRandom(x, y);
-	}
-	
-	private void spawnBlock(int x, int y) {		
-		float mass = 100;
-		float width = 20;
-		float height = 20;
-		
-		RigidBody body = createDiamond(x, HEIGHT - y, width, height, mass);
-		
-		entities.add(body);
-	}
-	
-	private void spawnRandom(int x, int y) {		
-		int xSpread = 200;
-		int ySpread = 200;
-		
-		float width = 20;
-		float height = 20;
-		float mass = 100;
-		
-		RigidBody body;
-		
-		for (int i = 0; i < 20; i++) {
-			float xPos = (float)Math.random() * xSpread + x - xSpread / 2;
-			float yPos = (float)Math.random() * ySpread + (HEIGHT - y) - ySpread / 2;
-			
-			if (i % 2 == 3) {
-				body = createBox(xPos, yPos, width, height, mass);
-			} else {
-				body = createDiamond(xPos, yPos, width, height, mass);
-			}
-
-			entities.add(body);
-		}
-	}
-	
-	private PolyBody createDiamond(float x, float y, float width, float height, float mass) {
-		List<Vector2D> points = new ArrayList<Vector2D>();
-		points.add(new Vector2D(width / 2, 0));
-		points.add(new Vector2D(width, height / 2));
-		points.add(new Vector2D(width / 2, height));
-		points.add(new Vector2D(0, height / 2));
-		
-		return new PolyBody(x, y, mass, points);
+		entities.addAll(PhysSimHelper.spawnRandom(x, y));
 	}
 	
 	private PolyBody createBox(float x, float y, float width, float height, float mass) {
