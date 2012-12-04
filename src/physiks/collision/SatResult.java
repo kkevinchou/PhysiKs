@@ -2,7 +2,7 @@ package physiks.collision;
 
 import physiks.geometry.Vector2D;
 
-public final class SatResult {
+public final class SatResult2 {
 	private final Vector2D separatingAxis;
 	private final Vector2D minimumSeparatingVector;
 
