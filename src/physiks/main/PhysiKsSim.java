@@ -25,7 +25,7 @@ public class PhysiKsSim extends BasicGame {
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
 	
-	int spawnCooldown;
+	private int spawnCooldown = 0;
 	
 	private PhysicsEngine physEngine;
 	private RenderEngine renderEngine;
@@ -39,10 +39,10 @@ public class PhysiKsSim extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		entities = new ArrayList<RigidBody>();
 		
-		entities.add(PhysSimHelper.createDiamond(100, PhysiKsSim.HEIGHT - 120, 20, 20, 1));
-		entities.get(0).setVelocity(new Vector2D(100, 0));
-		entities.add(PhysSimHelper.createDiamond(400, PhysiKsSim.HEIGHT - 200, 20, 20, 1));
-		entities.get(1).setVelocity(new Vector2D(-200, 0));
+//		entities.add(PhysSimHelper.createDiamond(100, PhysiKsSim.HEIGHT - 120, 20, 20, 1));
+//		entities.get(0).setVelocity(new Vector2D(100, 0));
+//		entities.add(PhysSimHelper.createDiamond(400, PhysiKsSim.HEIGHT - 200, 20, 20, 1));
+//		entities.get(1).setVelocity(new Vector2D(-200, 0));
 //		entities.add(PhysSimHelper.createDiamond(390, PhysiKsSim.HEIGHT - 140, 20, 20, 1));
 
 		PhysSimHelper.createObstacles(entities);
@@ -57,14 +57,7 @@ public class PhysiKsSim extends BasicGame {
 		physEngine = new PhysicsEngine(entities);
 		renderEngine = new RenderEngine(entities);
 		
-		spawnCooldown = 0;
 		AudioPlayer.getInstance().setSoundsEnabled(false);
-		
-//		int count = 100000;
-//		while (count-- > 0) {
-//			physEngine.update(16);
-//			System.out.println(count + " " + entities.get(0).getVelocity().magnitude());
-//		}
 	}
 
 	public void update(GameContainer gameContainer, int delta) throws SlickException {
@@ -95,9 +88,10 @@ public class PhysiKsSim extends BasicGame {
 		if (spawnCooldown < 300) {
 			return;
 		}
-		spawnCooldown = 0;
 		
-		entities.addAll(PhysSimHelper.spawnRandom(x, y));
+		entities.addAll(PhysSimHelper.spawnRandom(x, y, 10));
+
+		spawnCooldown = 0;
 	}
 
 	public static void main(String[] args) {

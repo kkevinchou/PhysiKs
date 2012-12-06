@@ -54,22 +54,12 @@ public abstract class PhysSimHelper {
 		return walls;
 	}
 	
-	public static RigidBody spawnBlock(int x, int y) {		
-		float mass = 100;
-		float width = 20;
-		float height = 20;
-		
-		RigidBody body = createDiamond(x, PhysiKsSim.HEIGHT - y, width, height, mass);
-		return body;
-	}
-	
-	public static List<RigidBody> spawnRandom(int x, int y) {		
+	public static List<RigidBody> spawnRandom(int x, int y, float mass) {		
 		int xSpread = 200;
 		int ySpread = 200;
 		
 		float width = 20;
 		float height = 20;
-		float mass = 100;
 		
 		RigidBody body;
 		
@@ -94,7 +84,7 @@ public abstract class PhysSimHelper {
 	}
 	
 	public static void reset(List<RigidBody> entities, List<SpatialData> spatialData) {
-		for (int i = 0; i < entities.size(); i++) {
+		for (int i = 0; i < spatialData.size(); i++) {
 			RigidBody entity = entities.get(i);
 			SpatialData data = spatialData.get(i);
 			
