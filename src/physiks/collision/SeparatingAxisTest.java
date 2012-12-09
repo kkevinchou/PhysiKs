@@ -1,12 +1,18 @@
 package physiks.collision;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import physiks.engine.misc.PhysHelper;
 import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
 import physiks.geometry.Vector2D;
+import physiks.util.Util;
 
 
 public abstract class SeparatingAxisTest {
@@ -21,13 +27,9 @@ public abstract class SeparatingAxisTest {
 		PolyBody body1 = (PolyBody)a;
 		PolyBody body2 = (PolyBody)b;
 		
-		List<Vector2D> normals = new ArrayList<Vector2D>();
-		normals.addAll(body1.getNormals());
-		normals.addAll(body2.getNormals());
-		
-		for (Vector2D normal : normals) {
+		for (Vector2D normal : PhysHelper.getUniqueNormals(body1, body2)) {
 			float overlap = PhysHelper.overlapAlongAxis(body1, body2, normal);
-			if (overlap == 0) {
+			if (Util.epsilonEquals(overlap, 0, 0.001f)) {
 				return normal.perpendicular();
 			}
 		}

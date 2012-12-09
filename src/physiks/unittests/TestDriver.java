@@ -15,11 +15,11 @@ public class TestDriver {
 		Test d = new PhysUtilsTest();
 		Test e = new PastFixesTest();
 		
-		tests.add(e);
 		tests.add(a);
 		tests.add(b);
 		tests.add(c);
 		tests.add(d);
+		tests.add(e);
 		
 		System.out.println("Starting Tests...");
 		

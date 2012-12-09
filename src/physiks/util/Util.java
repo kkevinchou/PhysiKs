@@ -10,7 +10,16 @@ public class Util {
 	}
 	
 	public static boolean relativeEquals(float a, float b) {
+		if (a == b) {
+			return true;
+		}
+		
 		float relativeError = Math.abs((a - b) / b);
+		
 		return (relativeError <= allowableRelativeError);
+	}
+	
+	public static boolean epsilonEquals(float a, float b, float epsilon) {
+		return Math.abs(a - b) < Math.abs(epsilon);
 	}
 }

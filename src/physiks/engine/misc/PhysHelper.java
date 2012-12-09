@@ -1,7 +1,9 @@
 package physiks.engine.misc;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import physiks.collision.SeparatingAxisTest;
 import physiks.engine.PhysicsEngine;
@@ -159,26 +161,40 @@ public abstract class PhysHelper {
 	 * @return minimum separating vector, a zero vector is returned if the two bodies are not intersecting
 	 */
 	public static Vector2D calculateMinimumSeparatingVector(RigidBody a, RigidBody b) {
-		PolyBody p1 = (PolyBody)a;
-		PolyBody p2 = (PolyBody)b;
+		PolyBody body1 = (PolyBody)a;
+		PolyBody body2 = (PolyBody)b;
 
 		float minOverlap = Float.POSITIVE_INFINITY;
 		Vector2D minSeparatingVector = Vector2D.ZERO;
 		
-		if (SeparatingAxisTest.getSeparatingAxis(p1, p2) == null) {
-			List<Vector2D> normals = new ArrayList<Vector2D>();
-			normals.addAll(p1.getNormals());
-			normals.addAll(p2.getNormals());
+		if (SeparatingAxisTest.getSeparatingAxis(body1, body2) == null) {
+			List<Vector2D> normals = getUniqueNormals(body1, body2);
 			
 			for (Vector2D normal : normals) {
-				float overlap = PhysHelper.overlapAlongAxis(p1, p2, normal);
+				float overlap = PhysHelper.overlapAlongAxis(body1, body2, normal);
 				if (overlap < minOverlap) {
 					minOverlap = overlap;
-					minSeparatingVector = normal.mult(minOverlap).pointAlongWith(p1.getCenter().sub(p2.getCenter()));
+					minSeparatingVector = normal.mult(minOverlap).pointAlongWith(body1.getCenter().sub(body2.getCenter()));
 				}
 			}
 		}
 
 		return minSeparatingVector;
+	}
+	
+	public static List<Vector2D> getUniqueNormals(PolyBody body1, PolyBody body2) {
+		Map<Float, Vector2D> normals = new LinkedHashMap<Float, Vector2D>();
+		
+		for (Vector2D normal : body1.getNormals()) {
+			Float key = normal.getX() / normal.getY();
+			normals.put(key, normal);
+		}
+		
+		for (Vector2D normal : body2.getNormals()) {
+			Float key = normal.getX() / normal.getY();
+			normals.put(key, normal);
+		}
+		
+		return new ArrayList<Vector2D>(normals.values());
 	}
 }

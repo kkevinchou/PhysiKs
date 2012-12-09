@@ -44,11 +44,14 @@ public class PhysiKsSim extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		entities = new ArrayList<RigidBody>();
 		
-//		entities.add(PhysSimHelper.createDiamond(100, PhysiKsSim.HEIGHT - 120, 20, 20, 1));
-//		entities.get(0).setVelocity(new Vector2D(100, 0));
-//		entities.add(PhysSimHelper.createDiamond(400, PhysiKsSim.HEIGHT - 200, 20, 20, 1));
-//		entities.get(1).setVelocity(new Vector2D(-200, 0));
-//		entities.add(PhysSimHelper.createDiamond(390, PhysiKsSim.HEIGHT - 140, 20, 20, 1));
+//		[Vector2D X: 7.86578 Y: 8.50792]
+//		[Vector2D X: 9.388585 Y: 6.985115]
+//		[Vector2D X: 4.75992 Y: 22.77066]
+		RigidBody b1 = PhysSimHelper.createDiamond(7.86578f, 8.50792f, 20, 20, 1);
+		RigidBody b2 = PhysSimHelper.createDiamond(4.75992f, 22.77066f, 20, 20, 1);
+		
+		entities.add(b1);
+		entities.add(b2);
 
 		PhysSimHelper.createObstacles(entities);
 		
@@ -60,12 +63,31 @@ public class PhysiKsSim extends BasicGame {
 	}
 
 	public void update(GameContainer gameContainer, int delta) throws SlickException {
+		if (Keyboard.isKeyDown(Keyboard.KEY_M)) {
+			if (MODE == Mode.Normal) {
+				MODE = Mode.Frame;
+			} else if (MODE == Mode.Frame) {
+				MODE = Mode.Normal;
+			}
+		}
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+			Display.destroy();
+			AL.destroy();
+			System.exit(0);
+		}
+		
+		spawnCooldown += delta;
+		if (Mouse.isButtonDown(0)) {
+			spawn(Mouse.getX(), Mouse.getY());
+		}
+		
 		switch (MODE) {
 			case Normal:
 				physEngine.update(delta);
 				break;
 			case Frame:
-				if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+				if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
 					try	{
 						physEngine.update(16);
 					} catch(Exception e) {
@@ -80,7 +102,7 @@ public class PhysiKsSim extends BasicGame {
 				
 				if (stepCooldown < 300) break;
 				
-				if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+				if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
 					try	{
 						physEngine.update(16);
 					} catch(Exception e) {
@@ -93,17 +115,6 @@ public class PhysiKsSim extends BasicGame {
 				stepCooldown = 0;
 			default:
 				break;
-		}
-
-		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-			Display.destroy();
-			AL.destroy();
-			System.exit(0);
-		}
-		
-		spawnCooldown += delta;
-		if (Mouse.isButtonDown(0)) {
-			spawn(Mouse.getX(), Mouse.getY());
 		}
 	}
 

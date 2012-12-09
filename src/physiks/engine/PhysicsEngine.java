@@ -117,13 +117,24 @@ public class PhysicsEngine {
 		PolyBody body = (PolyBody)a;
 		PolyBody target = (PolyBody)b;
 		
-		Vector2D collisionNormal = calculateCollisionNormal(body, target, prevSpatialData);
-		Vector2D separatingVector = calculateSeparatingVector(body, target, collisionNormal);
-
+//		Vector2D collisionNormal = calculateCollisionNormal(body, target, prevSpatialData);
+//		Vector2D separatingVector = calculateSeparatingVector(body, target, collisionNormal);
 //		Vector2D separatingVector = PhysHelper.calculateMinimumSeparatingVector(body, target);
-//		Vector2D collisionNormal = separatingVector.normalize();
+
+		Vector2D separatingVector = PhysHelper.calculateMinimumSeparatingVector(body, target);
+		Vector2D collisionNormal = separatingVector.normalize();
+		
+		Vector2D prevPos = body.getPosition();
 		
 		body.setPosition(body.getPosition().add(separatingVector));
+		
+		if (SeparatingAxisTest.getSeparatingAxis(body, target) == null) {
+			System.out.println("[resolveCollision] ERROR HERE!");
+			System.out.println("Previous Position:" + prevPos);
+			System.out.println("Current Position: " + body.getPosition());
+			System.out.println("Target Position: " + target.getPosition());
+			System.out.println("Separating Vector: " + separatingVector);
+		}
 		
 		float impulseMagnitude = PhysHelper.calculateImpulseMagnitude(body, target, collisionNormal);
 		Vector2D impulseVector = collisionNormal.mult(impulseMagnitude);
@@ -147,19 +158,19 @@ public class PhysicsEngine {
 		// Fallback: Use the minimum separating vector as the normal
 		if (separatingAxis == null) {
 			Vector2D minSeparatingVector = PhysHelper.calculateMinimumSeparatingVector(body1, body2);
-			body1.setPosition(body1.getPosition().add(minSeparatingVector));
+//			body1.setPosition(body1.getPosition().add(minSeparatingVector));
 			
 			collisionNormal = minSeparatingVector.normalize();
 //			collisionNormal = collisionNormal.pointAlongWith(body1.getVelocity().mult(-1)).normalize();
 			
-			separatingAxis = SeparatingAxisTest.getSeparatingAxis(body1, body2);
+//			separatingAxis = SeparatingAxisTest.getSeparatingAxis(body1, body2);
+//			
+//			if (separatingAxis == null) {
+//				System.out.println("WTF? no separating axis after rewinding it?");
+//			}
 			
-			if (separatingAxis == null) {
-				System.out.println("WTF? no separating axis after rewinding it?");
-			}
-			
-			collisionNormal = separatingAxis.perpendicular();
-			collisionNormal = collisionNormal.pointAlongWith(body1.getVelocity().mult(-1)).normalize();
+//			collisionNormal = separatingAxis.perpendicular();
+//			collisionNormal = collisionNormal.pointAlongWith(body1.getVelocity().mult(-1)).normalize();
 			
 //			System.out.println("WTF? no separating axis after rewinding it?");
 //			System.exit(1);
@@ -184,9 +195,10 @@ public class PhysicsEngine {
 	// TODO: the separating vector should rewind based on the velocity, then play more
 	// physics in the axis that doesn't collide.
 	private Vector2D calculateSeparatingVector(RigidBody body1, RigidBody body2, Vector2D collisionNormal) {
-		
 		float separatingMagnitude = PhysHelper.overlapAlongAxis(body1, body2, collisionNormal);
 		Vector2D separatingVector = collisionNormal.mult(separatingMagnitude);
+		
+
 
 		return separatingVector;
 	}

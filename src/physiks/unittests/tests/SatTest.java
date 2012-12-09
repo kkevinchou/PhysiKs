@@ -25,7 +25,7 @@ public final class SatTest extends Test {
 		Vector2D result = SeparatingAxisTest.getSeparatingAxis(body1, body2);
 		
 		// PolyBodies are right next to each other, technically not colliding.
-		tAssert(result, new Vector2D(0, 1));
+		tAssert(result, new Vector2D(-0, -1));
 	}
 	
 	private void zeroSeparationVertical() {
