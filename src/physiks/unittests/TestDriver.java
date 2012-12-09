@@ -13,7 +13,9 @@ public class TestDriver {
 		Test b = new SatTest();
 		Test c = new QuadTreeTest();
 		Test d = new PhysUtilsTest();
+		Test e = new PastFixesTest();
 		
+		tests.add(e);
 		tests.add(a);
 		tests.add(b);
 		tests.add(c);

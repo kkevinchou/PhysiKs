@@ -28,7 +28,7 @@ public class PolyBody extends RigidBody {
 		Vector2D center = Vector2D.ZERO;
 		
 		for (Vector2D point : points) {
-			center.add(point);
+			center = center.add(point);
 			this.points.add(point);
 		}
 		setCenter(center.div(points.size()));

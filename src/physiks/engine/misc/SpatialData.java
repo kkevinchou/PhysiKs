@@ -8,7 +8,7 @@ public class SpatialData {
 	Vector2D velocity;
 	Vector2D acceleration;
 	
-	public SpatialData(RigidBody body) {
+	private SpatialData(RigidBody body) {
 		this.position = body.getPosition();
 		this.velocity = body.getVelocity();
 		this.acceleration = body.getAcceleration();
@@ -34,5 +34,15 @@ public class SpatialData {
 
 	public Vector2D getAcceleration() {
 		return acceleration;
+	}
+	
+	public void loadInto(RigidBody body) {
+		body.setPosition(position);
+		body.setVelocity(velocity);
+		body.setAcceleration(acceleration);
+	}
+	
+	public static SpatialData createFrom(RigidBody body) {
+		return new SpatialData(body);
 	}
 }

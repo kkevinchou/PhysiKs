@@ -26,11 +26,16 @@ public class PhysiKsSim extends BasicGame {
 	public static final int HEIGHT = 600;
 	
 	private int spawnCooldown = 0;
+	private int stepCooldown = 0;
+	public static Mode MODE = Mode.Frame;
 	
 	private PhysicsEngine physEngine;
 	private RenderEngine renderEngine;
 	public static List<RigidBody> entities;
-	private List<SpatialData> initialSpatialData;
+	
+	public enum Mode {
+		Normal, Frame, Step
+	}
 	
 	public PhysiKsSim(String title) {
 		super(title);
@@ -47,12 +52,6 @@ public class PhysiKsSim extends BasicGame {
 
 		PhysSimHelper.createObstacles(entities);
 		
-		// Record the initial spatial data for use when resetting
-		initialSpatialData = new ArrayList<SpatialData>();
-		for (RigidBody entity : entities) {
-			initialSpatialData.add(new SpatialData(entity));
-		}
-		
 		// Initialize engines
 		physEngine = new PhysicsEngine(entities);
 		renderEngine = new RenderEngine(entities);
@@ -61,16 +60,45 @@ public class PhysiKsSim extends BasicGame {
 	}
 
 	public void update(GameContainer gameContainer, int delta) throws SlickException {
-		physEngine.update(delta);
+		switch (MODE) {
+			case Normal:
+				physEngine.update(delta);
+				break;
+			case Frame:
+				if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+					try	{
+						physEngine.update(16);
+					} catch(Exception e) {
+						physEngine.stepBack();
+					}
+				} else if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
+					physEngine.stepBack();
+				}
+				break;
+			case Step:
+				stepCooldown += 16;
+				
+				if (stepCooldown < 300) break;
+				
+				if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+					try	{
+						physEngine.update(16);
+					} catch(Exception e) {
+						physEngine.stepBack();
+					}
+				} else if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
+					physEngine.stepBack();
+				}
+				
+				stepCooldown = 0;
+			default:
+				break;
+		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			Display.destroy();
 			AL.destroy();
 			System.exit(0);
-		}
-		
-		if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
-			PhysSimHelper.reset(entities, initialSpatialData);
 		}
 		
 		spawnCooldown += delta;
@@ -88,7 +116,9 @@ public class PhysiKsSim extends BasicGame {
 		if (spawnCooldown < 300) {
 			return;
 		}
+		System.out.println("Mouse: " + Mouse.getX() + ", " + Mouse.getY());
 		
+//		entities.add(PhysSimHelper.spawnDiamond(x, y, 10));
 		entities.addAll(PhysSimHelper.spawnRandom(x, y, 10));
 
 		spawnCooldown = 0;

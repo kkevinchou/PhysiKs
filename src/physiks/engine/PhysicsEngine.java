@@ -1,6 +1,9 @@
 package physiks.engine;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
 import physiks.audio.AudioPlayer;
 import physiks.collision.SeparatingAxisTest;
@@ -16,16 +19,30 @@ import physiks.quadtree.QuadTree;
 public class PhysicsEngine {
 	private List<RigidBody> entities;
 	private QuadTree quadTree;
+	private Stack<Map<Integer, SpatialData>> frames;
 	public static final float coefficientOfRestitution = 0.7f;
 	
 	public PhysicsEngine(List<RigidBody> entities) {
 		this.entities = entities;
-		quadTree = new QuadTree(-PhysiKsSim.WIDTH, -PhysiKsSim.HEIGHT, PhysiKsSim.WIDTH*3, PhysiKsSim.HEIGHT*3, 4);
+		frames = new Stack<Map<Integer, SpatialData>>();
+		quadTree = new QuadTree(-PhysiKsSim.WIDTH, -PhysiKsSim.HEIGHT, PhysiKsSim.WIDTH*3, PhysiKsSim.HEIGHT*3, 4000);
+	}
+	
+	public void stepBack() {
+		if (frames.size() == 0) return;
+		
+		Map<Integer, SpatialData> frame = frames.pop();
+		
+		for (RigidBody entity : entities) {
+			SpatialData s = frame.get(entity.getId());
+			if (s != null) {
+				s.loadInto(entity);
+			}
+		}
 	}
 	
 	public void update(int delta) {
-		delta = Math.min(16, delta);
-		delta = 16; // This is to ensure determinism when doing testing
+		delta = (PhysiKsSim.MODE == PhysiKsSim.Mode.Normal) ? 16 : delta;
 		
 		float deltaInSeconds = (float)delta/1000;
 		
@@ -37,6 +54,12 @@ public class PhysicsEngine {
 		for (RigidBody entity : entities) {
 			performTimeStep(entity, deltaInSeconds);
 		}
+
+		Map<Integer, SpatialData> m = new HashMap<Integer, SpatialData>();
+		for (RigidBody entity : entities) {
+			m.put(entity.getId(), SpatialData.createFrom(entity));
+		}
+		frames.push(m);
 		
 //		String logOutput = frameNumber++ + " " + entities.get(0).getPosition() + " " + entities.get(0).getVelocity() + " " + entities.get(0).getAcceleration();
 //		System.out.println(logOutput);
@@ -44,7 +67,11 @@ public class PhysicsEngine {
 	
 	private void performTimeStep(RigidBody body, float delta) {
 		PhysHelper.zeroOutMicroVelocities(body, 0.01f);
-		SpatialData prevSpatialData = new SpatialData(body);
+		SpatialData prevSpatialData = SpatialData.createFrom(body);
+		
+		if (body.getMass() == Float.POSITIVE_INFINITY) {
+			return;
+		}
 		
 		advanceBody(body, delta);
 		
@@ -80,7 +107,6 @@ public class PhysicsEngine {
 		PolyBody target = (PolyBody)b;
 		
 		if (body.getId() == target.getId()) return false;
-		if (body.getMass() == Float.POSITIVE_INFINITY) return false;
 		
 		Vector2D separatingAxis = SeparatingAxisTest.getSeparatingAxis(body, target);
 
@@ -91,12 +117,11 @@ public class PhysicsEngine {
 		PolyBody body = (PolyBody)a;
 		PolyBody target = (PolyBody)b;
 		
-//		Vector2D collisionNormal = calculateCollisionNormal(body, target, prevSpatialData);
-//		Vector2D separatingVector = calculateSeparatingVector(body, target, collisionNormal);
-		
-		// testing
-		Vector2D separatingVector = PhysHelper.calculateMinimumSeparatingVector(body, target);
-		Vector2D collisionNormal = separatingVector.normalize();
+		Vector2D collisionNormal = calculateCollisionNormal(body, target, prevSpatialData);
+		Vector2D separatingVector = calculateSeparatingVector(body, target, collisionNormal);
+
+//		Vector2D separatingVector = PhysHelper.calculateMinimumSeparatingVector(body, target);
+//		Vector2D collisionNormal = separatingVector.normalize();
 		
 		body.setPosition(body.getPosition().add(separatingVector));
 		
@@ -111,30 +136,41 @@ public class PhysicsEngine {
 		PolyBody body1 = (PolyBody)a;
 		PolyBody body2 = (PolyBody)b;
 		
-		SpatialData currentSpatialData = new SpatialData(a);
+		Vector2D collisionNormal = null;
 		
-		// Load previous position to find the separating axis
-		body1.setPosition(prevSpatialData.getPosition());
+		SpatialData currentSpatialData = SpatialData.createFrom(a);
 		
+		// Rewind body for separating axis calculations
+		prevSpatialData.loadInto(body1);
 		Vector2D separatingAxis = SeparatingAxisTest.getSeparatingAxis(body1, body2);
+		
+		// Fallback: Use the minimum separating vector as the normal
 		if (separatingAxis == null) {
-//			Vector2D minSeparatingVector = PhysHelper.getMinimumSeparatingVector(body1, body2);
-//			Vector2D safePosition = body1.getPosition().add(minSeparatingVector);
-//			
-//			prevSpatialData.setPosition(safePosition);
-//			body1.setPosition(safePosition);
-//			separatingAxis = SeparatingAxisTest.getSeparatingAxis(body1, body2);
+			Vector2D minSeparatingVector = PhysHelper.calculateMinimumSeparatingVector(body1, body2);
+			body1.setPosition(body1.getPosition().add(minSeparatingVector));
 			
-			System.out.println("WTF? no separating axis after rewinding it?");
-			System.exit(1);
+			collisionNormal = minSeparatingVector.normalize();
+//			collisionNormal = collisionNormal.pointAlongWith(body1.getVelocity().mult(-1)).normalize();
+			
+			separatingAxis = SeparatingAxisTest.getSeparatingAxis(body1, body2);
+			
+			if (separatingAxis == null) {
+				System.out.println("WTF? no separating axis after rewinding it?");
+			}
+			
+			collisionNormal = separatingAxis.perpendicular();
+			collisionNormal = collisionNormal.pointAlongWith(body1.getVelocity().mult(-1)).normalize();
+			
+//			System.out.println("WTF? no separating axis after rewinding it?");
+//			System.exit(1);
+		} else {
+			// TODO: Make sure the collision normal is actually the normal of the closest edge.
+			collisionNormal = separatingAxis.perpendicular();
+			collisionNormal = collisionNormal.pointAlongWith(body1.getVelocity().mult(-1)).normalize();
+			
+			// Reload current position
+			body1.setPosition(currentSpatialData.getPosition());
 		}
-		
-		// TODO: Make sure the collision normal is actually the normal of the closest edge.
-		Vector2D collisionNormal = separatingAxis.perpendicular();
-		collisionNormal = collisionNormal.pointAlongWith(body1.getVelocity().mult(-1)).normalize();
-		
-		// Reload current position
-		body1.setPosition(currentSpatialData.getPosition());
 		
 		return collisionNormal;
 	}
