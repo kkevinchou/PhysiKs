@@ -20,6 +20,7 @@ public class PhysicsEngine {
 	private List<RigidBody> entities;
 	private QuadTree quadTree;
 	private Stack<Map<Integer, SpatialData>> frames;
+	private int frameNumber = 0;
 	public static final float coefficientOfRestitution = 0.7f;
 	
 	public PhysicsEngine(List<RigidBody> entities) {
@@ -42,6 +43,7 @@ public class PhysicsEngine {
 	}
 	
 	public void update(int delta) {
+		System.out.println("   =============== Frame Number: " + frameNumber++);
 		delta = (PhysiKsSim.MODE == PhysiKsSim.Mode.Normal) ? 16 : delta;
 		
 		float deltaInSeconds = (float)delta/1000;
@@ -117,12 +119,20 @@ public class PhysicsEngine {
 		PolyBody body = (PolyBody)a;
 		PolyBody target = (PolyBody)b;
 		
-//		Vector2D collisionNormal = calculateCollisionNormal(body, target, prevSpatialData);
-//		Vector2D separatingVector = calculateSeparatingVector(body, target, collisionNormal);
+		if (body.getId() == PhysiKsSim.testId && target.getMass() != Float.POSITIVE_INFINITY && PhysiKsSim.testDebug) {
+			PhysiKsSim.testDebug = false;
+			String s = "adsf";
+			s += "meow";
+		}
+		
+		Vector2D collisionNormal = calculateCollisionNormal(body, target, prevSpatialData);
+		Vector2D separatingVector = calculateSeparatingVector(body, target, collisionNormal);
 //		Vector2D separatingVector = PhysHelper.calculateMinimumSeparatingVector(body, target);
 
-		Vector2D separatingVector = PhysHelper.calculateMinimumSeparatingVector(body, target);
-		Vector2D collisionNormal = separatingVector.normalize();
+//		Vector2D separatingVector = PhysHelper.calculateMinimumSeparatingVector(body, target);
+//		Vector2D collisionNormal = separatingVector.normalize();
+		
+//		separatingVector = separatingVector.pointAlongWith(body.getCenter().sub(target.getCenter()));
 		
 		Vector2D prevPos = body.getPosition();
 		
@@ -149,7 +159,7 @@ public class PhysicsEngine {
 		
 		Vector2D collisionNormal = null;
 		
-		SpatialData currentSpatialData = SpatialData.createFrom(a);
+		SpatialData currentSpatialData = SpatialData.createFrom(body1);
 		
 		// Rewind body for separating axis calculations
 		prevSpatialData.loadInto(body1);
@@ -157,6 +167,7 @@ public class PhysicsEngine {
 		
 		// Fallback: Use the minimum separating vector as the normal
 		if (separatingAxis == null) {
+			currentSpatialData.loadInto(body1);
 			Vector2D minSeparatingVector = PhysHelper.calculateMinimumSeparatingVector(body1, body2);
 //			body1.setPosition(body1.getPosition().add(minSeparatingVector));
 			
@@ -197,8 +208,6 @@ public class PhysicsEngine {
 	private Vector2D calculateSeparatingVector(RigidBody body1, RigidBody body2, Vector2D collisionNormal) {
 		float separatingMagnitude = PhysHelper.overlapAlongAxis(body1, body2, collisionNormal);
 		Vector2D separatingVector = collisionNormal.mult(separatingMagnitude);
-		
-
 
 		return separatingVector;
 	}

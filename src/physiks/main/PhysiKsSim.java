@@ -26,12 +26,15 @@ public class PhysiKsSim extends BasicGame {
 	public static final int HEIGHT = 600;
 	
 	private int spawnCooldown = 0;
-	private int stepCooldown = 0;
-	public static Mode MODE = Mode.Frame;
+	private int buttonCooldown = 0;
+	public static Mode MODE = Mode.Normal;
 	
 	private PhysicsEngine physEngine;
 	private RenderEngine renderEngine;
 	public static List<RigidBody> entities;
+	
+	public static int testId = 999;
+	public static boolean testDebug = true;
 	
 	public enum Mode {
 		Normal, Frame, Step
@@ -44,14 +47,15 @@ public class PhysiKsSim extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		entities = new ArrayList<RigidBody>();
 		
-//		[Vector2D X: 7.86578 Y: 8.50792]
-//		[Vector2D X: 9.388585 Y: 6.985115]
-//		[Vector2D X: 4.75992 Y: 22.77066]
-		RigidBody b1 = PhysSimHelper.createDiamond(7.86578f, 8.50792f, 20, 20, 1);
-		RigidBody b2 = PhysSimHelper.createDiamond(4.75992f, 22.77066f, 20, 20, 1);
+		RigidBody b1 = PhysSimHelper.createDiamond(0, PhysiKsSim.HEIGHT - 120, 20, 20, 1);
+		RigidBody b2 = PhysSimHelper.createDiamond(100, PhysiKsSim.HEIGHT - 120, 20, 20, 1);
+		b2.setVelocity(new Vector2D(-50, 0));
+		RigidBody b3 = PhysSimHelper.createDiamond(120, PhysiKsSim.HEIGHT - 120, 20, 20, 1);
+		b3.setVelocity(new Vector2D(-50, 0));
 		
 		entities.add(b1);
 		entities.add(b2);
+		entities.add(b3);
 
 		PhysSimHelper.createObstacles(entities);
 		
@@ -63,13 +67,7 @@ public class PhysiKsSim extends BasicGame {
 	}
 
 	public void update(GameContainer gameContainer, int delta) throws SlickException {
-		if (Keyboard.isKeyDown(Keyboard.KEY_M)) {
-			if (MODE == Mode.Normal) {
-				MODE = Mode.Frame;
-			} else if (MODE == Mode.Frame) {
-				MODE = Mode.Normal;
-			}
-		}
+		buttonCooldown += 16;
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			Display.destroy();
@@ -77,9 +75,22 @@ public class PhysiKsSim extends BasicGame {
 			System.exit(0);
 		}
 		
+		if (buttonCooldown >= 300) {
+			if (Keyboard.isKeyDown(Keyboard.KEY_M)) {
+				if (MODE == Mode.Normal) {
+					MODE = Mode.Frame;
+				} else if (MODE == Mode.Frame) {
+					MODE = Mode.Normal;
+				}
+			}
+			buttonCooldown = 0;
+		}
+		
 		spawnCooldown += delta;
 		if (Mouse.isButtonDown(0)) {
-			spawn(Mouse.getX(), Mouse.getY());
+			spawn(Mouse.getX(), Mouse.getY(), true);
+		} else if (Mouse.isButtonDown(1)){
+			spawn(Mouse.getX(), Mouse.getY(), false);
 		}
 		
 		switch (MODE) {
@@ -87,34 +98,26 @@ public class PhysiKsSim extends BasicGame {
 				physEngine.update(delta);
 				break;
 			case Frame:
-				if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
-					try	{
-						physEngine.update(16);
-					} catch(Exception e) {
-						physEngine.stepBack();
-					}
-				} else if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
-					physEngine.stepBack();
-				}
+				frameFunction();
 				break;
 			case Step:
-				stepCooldown += 16;
-				
-				if (stepCooldown < 300) break;
-				
-				if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
-					try	{
-						physEngine.update(16);
-					} catch(Exception e) {
-						physEngine.stepBack();
-					}
-				} else if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
-					physEngine.stepBack();
-				}
-				
-				stepCooldown = 0;
+				if (buttonCooldown < 300) break;
+				frameFunction();
+				buttonCooldown = 0;
 			default:
 				break;
+		}
+	}
+	
+	private void frameFunction() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
+			try	{
+				physEngine.update(16);
+			} catch(Exception e) {
+				physEngine.stepBack();
+			}
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
+			physEngine.stepBack();
 		}
 	}
 
@@ -123,14 +126,20 @@ public class PhysiKsSim extends BasicGame {
 		renderEngine.update(graphics);
 	}
 	
-	private void spawn(int x, int y) {
+	private void spawn(int x, int y, boolean LeftButton) {
 		if (spawnCooldown < 300) {
 			return;
 		}
-		System.out.println("Mouse: " + Mouse.getX() + ", " + Mouse.getY());
 		
-//		entities.add(PhysSimHelper.spawnDiamond(x, y, 10));
-		entities.addAll(PhysSimHelper.spawnRandom(x, y, 10));
+		if (LeftButton) {
+			entities.addAll(PhysSimHelper.spawnRandom(x, y, 1));
+		} else {
+			RigidBody b = PhysSimHelper.spawnDiamond(x, y, 1);
+			b.setVelocity(Vector2D.LEFT.mult(50));
+			b.setId(++testId);
+			testDebug = true;
+			entities.add(b);
+		}
 
 		spawnCooldown = 0;
 	}

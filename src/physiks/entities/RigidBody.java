@@ -21,7 +21,7 @@ public abstract class RigidBody {
 	
 	private List<Force> forces;
 	
-	private final int id = intGenerator.nextInt();
+	private int id = intGenerator.nextInt();
 	private static final IntGenerator intGenerator = new IntGenerator();
 	
 	private Color generateRandomColor() {
@@ -43,6 +43,10 @@ public abstract class RigidBody {
 	
 	public int getId() {
 		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	public Vector2D getCenter() {
