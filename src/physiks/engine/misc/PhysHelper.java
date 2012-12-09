@@ -10,6 +10,7 @@ import physiks.engine.PhysicsEngine;
 import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
 import physiks.geometry.Vector2D;
+import physiks.util.Util;
 
 public abstract class PhysHelper {
 	
@@ -62,6 +63,11 @@ public abstract class PhysHelper {
 			return 0;
 		} else {
 			float overlap = (b1Projection + b2Projection) - combinedProjection;
+			
+			if (Util.epsilonEquals(overlap, 0, 0.001f)) {
+				return 0;
+			}
+			
 			return overlap;
 		}
 	}

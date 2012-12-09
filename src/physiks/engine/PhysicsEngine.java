@@ -127,7 +127,6 @@ public class PhysicsEngine {
 		
 		Vector2D collisionNormal = calculateCollisionNormal(body, target, prevSpatialData);
 		Vector2D separatingVector = calculateSeparatingVector(body, target, collisionNormal);
-//		Vector2D separatingVector = PhysHelper.calculateMinimumSeparatingVector(body, target);
 
 //		Vector2D separatingVector = PhysHelper.calculateMinimumSeparatingVector(body, target);
 //		Vector2D collisionNormal = separatingVector.normalize();
@@ -167,28 +166,12 @@ public class PhysicsEngine {
 		
 		// Fallback: Use the minimum separating vector as the normal
 		if (separatingAxis == null) {
-			currentSpatialData.loadInto(body1);
 			Vector2D minSeparatingVector = PhysHelper.calculateMinimumSeparatingVector(body1, body2);
-//			body1.setPosition(body1.getPosition().add(minSeparatingVector));
-			
 			collisionNormal = minSeparatingVector.normalize();
-//			collisionNormal = collisionNormal.pointAlongWith(body1.getVelocity().mult(-1)).normalize();
-			
-//			separatingAxis = SeparatingAxisTest.getSeparatingAxis(body1, body2);
-//			
-//			if (separatingAxis == null) {
-//				System.out.println("WTF? no separating axis after rewinding it?");
-//			}
-			
-//			collisionNormal = separatingAxis.perpendicular();
-//			collisionNormal = collisionNormal.pointAlongWith(body1.getVelocity().mult(-1)).normalize();
-			
-//			System.out.println("WTF? no separating axis after rewinding it?");
-//			System.exit(1);
 		} else {
 			// TODO: Make sure the collision normal is actually the normal of the closest edge.
 			collisionNormal = separatingAxis.perpendicular();
-			collisionNormal = collisionNormal.pointAlongWith(body1.getVelocity().mult(-1)).normalize();
+			collisionNormal = collisionNormal.pointAlongWith(body1.getCenter().sub(body2.getCenter())).normalize();
 			
 			// Reload current position
 			body1.setPosition(currentSpatialData.getPosition());

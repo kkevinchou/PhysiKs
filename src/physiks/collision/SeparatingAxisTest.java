@@ -29,7 +29,7 @@ public abstract class SeparatingAxisTest {
 		
 		for (Vector2D normal : PhysHelper.getUniqueNormals(body1, body2)) {
 			float overlap = PhysHelper.overlapAlongAxis(body1, body2, normal);
-			if (Util.epsilonEquals(overlap, 0, 0.001f)) {
+			if (overlap == 0) {
 				return normal.perpendicular();
 			}
 		}
