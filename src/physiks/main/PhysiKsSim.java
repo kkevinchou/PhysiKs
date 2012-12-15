@@ -47,15 +47,15 @@ public class PhysiKsSim extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		entities = new ArrayList<RigidBody>();
 		
-		RigidBody b1 = PhysSimHelper.createDiamond(0, PhysiKsSim.HEIGHT - 120, 20, 20, 1);
-		RigidBody b2 = PhysSimHelper.createDiamond(100, PhysiKsSim.HEIGHT - 120, 20, 20, 1);
-		b2.setVelocity(new Vector2D(-50, 0));
-		RigidBody b3 = PhysSimHelper.createDiamond(120, PhysiKsSim.HEIGHT - 120, 20, 20, 1);
-		b3.setVelocity(new Vector2D(-50, 0));
-		
-		entities.add(b1);
-		entities.add(b2);
-		entities.add(b3);
+//		RigidBody b1 = PhysSimHelper.createDiamond(0, PhysiKsSim.HEIGHT - 120, 20, 20, 1);
+//		RigidBody b2 = PhysSimHelper.createDiamond(100, PhysiKsSim.HEIGHT - 120, 20, 20, 1);
+//		b2.setVelocity(new Vector2D(-50, 0));
+//		RigidBody b3 = PhysSimHelper.createDiamond(120, PhysiKsSim.HEIGHT - 120, 20, 20, 1);
+//		b3.setVelocity(new Vector2D(-50, 0));
+//		
+//		entities.add(b1);
+//		entities.add(b2);
+//		entities.add(b3);
 
 		PhysSimHelper.createObstacles(entities);
 		

@@ -43,7 +43,7 @@ public class PhysicsEngine {
 	}
 	
 	public void update(int delta) {
-		System.out.println("   =============== Frame Number: " + frameNumber++);
+		System.out.println("   *** Frame Number: " + frameNumber++);
 		delta = (PhysiKsSim.MODE == PhysiKsSim.Mode.Normal) ? 16 : delta;
 		
 		float deltaInSeconds = (float)delta/1000;
@@ -69,12 +69,12 @@ public class PhysicsEngine {
 	
 	private void performTimeStep(RigidBody body, float delta) {
 		PhysHelper.zeroOutMicroVelocities(body, 0.01f);
-		SpatialData prevSpatialData = SpatialData.createFrom(body);
 		
 		if (body.getMass() == Float.POSITIVE_INFINITY) {
 			return;
 		}
 		
+		SpatialData prevSpatialData = SpatialData.createFrom(body);
 		advanceBody(body, delta);
 		
 		List<RigidBody> collisionCandidates = quadTree.getIntersectionCandidates(body);
@@ -131,8 +131,6 @@ public class PhysicsEngine {
 //		Vector2D separatingVector = PhysHelper.calculateMinimumSeparatingVector(body, target);
 //		Vector2D collisionNormal = separatingVector.normalize();
 		
-//		separatingVector = separatingVector.pointAlongWith(body.getCenter().sub(target.getCenter()));
-		
 		Vector2D prevPos = body.getPosition();
 		
 		body.setPosition(body.getPosition().add(separatingVector));
@@ -176,6 +174,10 @@ public class PhysicsEngine {
 			// Reload current position
 			body1.setPosition(currentSpatialData.getPosition());
 		}
+		
+		// debug
+		Vector2D minSeparatingVector = PhysHelper.calculateMinimumSeparatingVector(body1, body2);
+		collisionNormal = collisionNormal.pointAlongWith(minSeparatingVector);
 		
 		return collisionNormal;
 	}
