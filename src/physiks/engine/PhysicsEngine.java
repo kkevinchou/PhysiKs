@@ -1,5 +1,6 @@
 package physiks.engine;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +80,8 @@ public class PhysicsEngine {
 		advanceBody(body, delta);
 		
 		List<RigidBody> collisionCandidates = quadTree.getIntersectionCandidates(body);
+		List<RigidBody> colliders = new ArrayList<RigidBody>();
+		
 		for (RigidBody target : collisionCandidates) {
 			if (collidesWidth(body, target)) {
 				resolveCollision(body, target, prevSpatialData);

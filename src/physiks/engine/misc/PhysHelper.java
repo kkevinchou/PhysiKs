@@ -192,12 +192,12 @@ public abstract class PhysHelper {
 		Map<Float, Vector2D> normals = new LinkedHashMap<Float, Vector2D>();
 		
 		for (Vector2D normal : body1.getNormals()) {
-			Float key = normal.getX() / normal.getY();
+			Float key = normal.getY() / normal.getX();
 			normals.put(key, normal);
 		}
 		
 		for (Vector2D normal : body2.getNormals()) {
-			Float key = normal.getX() / normal.getY();
+			Float key = normal.getY() / normal.getX();
 			normals.put(key, normal);
 		}
 		
