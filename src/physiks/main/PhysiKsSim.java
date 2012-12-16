@@ -127,17 +127,20 @@ public class PhysiKsSim extends BasicGame {
 
 	public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
 		graphics.setAntiAlias(true);
-		renderEngine.update(graphics);
 		
+		renderEngine.update(graphics);
+		renderMouseOver();
+		}
+	
+	private void renderMouseOver() {
 		String mouseoverText = "";
-		RigidBody b = PhysSimHelper.createBox(Mouse.getX(), PhysiKsSim.HEIGHT - Mouse.getY(), 2, 2, 1);
+		RigidBody b = PhysSimHelper.createBox(Mouse.getX() - 1, PhysiKsSim.HEIGHT - Mouse.getY() - 1, 2, 2, 1);
 		for (RigidBody body : entities) {
 			if (SeparatingAxisTest.getSeparatingAxis(body, b) == null) {
 				mouseoverText += "Position: " + body.getPosition() + "\n";
 				mouseoverText += "Velocity: " + body.getVelocity() + "\n";
 			}
 		}
-		
 		font.get().drawString(0, 0, mouseoverText);
 	}
 	

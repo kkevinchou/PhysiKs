@@ -151,7 +151,7 @@ public class PhysicsEngine {
 		prevSpatialData.loadInto(body1);
 		Vector2D separatingAxis = SeparatingAxisTest.getSeparatingAxis(body1, body2);
 		
-		// Fallback: Use the minimum separating vector as the normal
+		// Fall-back: Use the minimum separating vector as the normal
 		if (separatingAxis == null) {
 			Vector2D minSeparatingVector = PhysHelper.calculateMinimumSeparatingVector(body1, body2);
 			collisionNormal = minSeparatingVector.normalize();
