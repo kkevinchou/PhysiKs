@@ -124,11 +124,11 @@ public class PhysicsEngine {
 			PhysiKsSim.testDebug = false;
 		}
 		
-		Vector2D collisionNormal = calculateCollisionNormal(body, target, prevSpatialData);
-		Vector2D separatingVector = calculateSeparatingVector(body, target, collisionNormal);
+//		Vector2D collisionNormal = calculateCollisionNormal(body, target, prevSpatialData);
+//		Vector2D separatingVector = calculateSeparatingVector(body, target, collisionNormal);
 
-//		Vector2D separatingVector = PhysHelper.calculateMinimumSeparatingVector(body, target);
-//		Vector2D collisionNormal = separatingVector.normalize();
+		Vector2D separatingVector = PhysHelper.calculateMinimumSeparatingVector(body, target);
+		Vector2D collisionNormal = separatingVector.normalize();
 		
 		body.setPosition(body.getPosition().add(separatingVector));
 		

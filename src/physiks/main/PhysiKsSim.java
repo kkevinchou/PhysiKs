@@ -64,7 +64,7 @@ public class PhysiKsSim extends BasicGame {
 	
 	private void initFont() {
 		 try {
-			font = new SimpleFont("Verdana", Font.PLAIN, 18);
+			font = new SimpleFont("Courier New", Font.BOLD, 18);
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
@@ -137,8 +137,8 @@ public class PhysiKsSim extends BasicGame {
 		RigidBody b = PhysSimHelper.createBox(Mouse.getX() - 1, PhysiKsSim.HEIGHT - Mouse.getY() - 1, 2, 2, 1);
 		for (RigidBody body : entities) {
 			if (SeparatingAxisTest.getSeparatingAxis(body, b) == null) {
-				mouseoverText += "Position: " + body.getPosition() + "\n";
-				mouseoverText += "Velocity: " + body.getVelocity() + "\n";
+//				mouseoverText += "Position: " + body.getPosition() + "\n";
+				mouseoverText += "[" + body.getId() + "] - " + "Velocity: " + body.getVelocity() + "\n";
 			}
 		}
 		font.get().drawString(0, 0, mouseoverText);
