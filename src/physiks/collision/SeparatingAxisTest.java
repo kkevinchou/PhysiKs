@@ -1,19 +1,9 @@
 package physiks.collision;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import physiks.engine.misc.PhysHelper;
 import physiks.entities.PolyBody;
 import physiks.entities.RigidBody;
 import physiks.geometry.Vector2D;
-import physiks.util.Util;
-
 
 public abstract class SeparatingAxisTest {
 	

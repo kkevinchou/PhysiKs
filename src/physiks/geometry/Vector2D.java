@@ -1,5 +1,7 @@
 package physiks.geometry;
 
+import java.text.DecimalFormat;
+
 public final class Vector2D {
 	private final float x;
 	private final float y;
@@ -9,6 +11,8 @@ public final class Vector2D {
 	public static final Vector2D DOWN = new Vector2D(0, 1);
 	public static final Vector2D LEFT = new Vector2D(-1, 0);
 	public static final Vector2D RIGHT = new Vector2D(1, 0);
+	
+	private static DecimalFormat formatter = new DecimalFormat("#0.00");
 	
 	public Vector2D() {
 		this(0, 0);
@@ -70,10 +74,6 @@ public final class Vector2D {
 		return false;
 	}
 	
-	public String toString() {
-		return "[Vector2D X: " + this.x + " Y: " + this.y + "]";
-	}
-	
 	public final Vector2D add(Vector2D vector) {
 		return new Vector2D(this.x + vector.getX(), this.y + vector.getY());
 	}
@@ -107,5 +107,9 @@ public final class Vector2D {
 			return this.mult(-1);
 		}
 		return this;
+	}
+	
+	public String toString() {
+		return "[Vector2D X: " + formatter.format(this.x) + " Y: " + formatter.format(this.y) + "]";
 	}
 }

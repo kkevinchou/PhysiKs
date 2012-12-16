@@ -1,4 +1,5 @@
 package physiks.main;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,29 +14,33 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 import physiks.audio.AudioPlayer;
+import physiks.collision.SeparatingAxisTest;
 import physiks.engine.PhysicsEngine;
-import physiks.engine.misc.SpatialData;
 import physiks.entities.RigidBody;
 import physiks.geometry.Vector2D;
 import physiks.main.misc.PhysSimHelper;
+import physiks.util.SimpleFont;
 import physiks.visual.RenderEngine;
 
 public class PhysiKsSim extends BasicGame {
 	private static final String TITLE = "PhysiKs";
-	public static final int WIDTH = 800;
-	public static final int HEIGHT = 600;
 	
 	private int spawnCooldown = 0;
 	private int buttonCooldown = 0;
-	public static Mode MODE = Mode.Normal;
 	
 	private PhysicsEngine physEngine;
 	private RenderEngine renderEngine;
+	
+	private SimpleFont font;
+	
+	public static final int WIDTH = 800;
+	public static final int HEIGHT = 600;
+	public static Mode MODE = Mode.Normal;
 	public static List<RigidBody> entities;
 	
 	public static int testId = 999;
 	public static boolean testDebug = true;
-	
+
 	public enum Mode {
 		Normal, Frame, Step
 	}
@@ -47,16 +52,6 @@ public class PhysiKsSim extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		entities = new ArrayList<RigidBody>();
 		
-//		RigidBody b1 = PhysSimHelper.createDiamond(0, PhysiKsSim.HEIGHT - 120, 20, 20, 1);
-//		RigidBody b2 = PhysSimHelper.createDiamond(100, PhysiKsSim.HEIGHT - 120, 20, 20, 1);
-//		b2.setVelocity(new Vector2D(-50, 0));
-//		RigidBody b3 = PhysSimHelper.createDiamond(120, PhysiKsSim.HEIGHT - 120, 20, 20, 1);
-//		b3.setVelocity(new Vector2D(-50, 0));
-//		
-//		entities.add(b1);
-//		entities.add(b2);
-//		entities.add(b3);
-
 		PhysSimHelper.createObstacles(entities);
 		
 		// Initialize engines
@@ -64,6 +59,15 @@ public class PhysiKsSim extends BasicGame {
 		renderEngine = new RenderEngine(entities);
 		
 		AudioPlayer.getInstance().setSoundsEnabled(false);
+		initFont();
+	}
+	
+	private void initFont() {
+		 try {
+			font = new SimpleFont("Verdana", Font.PLAIN, 18);
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void update(GameContainer gameContainer, int delta) throws SlickException {
@@ -124,6 +128,17 @@ public class PhysiKsSim extends BasicGame {
 	public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
 		graphics.setAntiAlias(true);
 		renderEngine.update(graphics);
+		
+		String mouseoverText = "";
+		RigidBody b = PhysSimHelper.createBox(Mouse.getX(), PhysiKsSim.HEIGHT - Mouse.getY(), 2, 2, 1);
+		for (RigidBody body : entities) {
+			if (SeparatingAxisTest.getSeparatingAxis(body, b) == null) {
+				mouseoverText += "Position: " + body.getPosition() + "\n";
+				mouseoverText += "Velocity: " + body.getVelocity() + "\n";
+			}
+		}
+		
+		font.get().drawString(0, 0, mouseoverText);
 	}
 	
 	private void spawn(int x, int y, boolean LeftButton) {

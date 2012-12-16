@@ -20,7 +20,8 @@ public class PhysicsEngine {
 	private List<RigidBody> entities;
 	private QuadTree quadTree;
 	private Stack<Map<Integer, SpatialData>> frames;
-	private int frameNumber = 0;
+//	private int frameNumber = 0;
+	
 	public static final float coefficientOfRestitution = 0.7f;
 	
 	public PhysicsEngine(List<RigidBody> entities) {
@@ -43,7 +44,7 @@ public class PhysicsEngine {
 	}
 	
 	public void update(int delta) {
-		System.out.println("   *** Frame Number: " + frameNumber++);
+//		System.out.println("   *** Frame Number: " + frameNumber++);
 		delta = (PhysiKsSim.MODE == PhysiKsSim.Mode.Normal) ? 16 : delta;
 		
 		float deltaInSeconds = (float)delta/1000;
@@ -121,8 +122,6 @@ public class PhysicsEngine {
 		
 		if (body.getId() == PhysiKsSim.testId && target.getMass() != Float.POSITIVE_INFINITY && PhysiKsSim.testDebug) {
 			PhysiKsSim.testDebug = false;
-			String s = "adsf";
-			s += "meow";
 		}
 		
 		Vector2D collisionNormal = calculateCollisionNormal(body, target, prevSpatialData);
@@ -131,17 +130,7 @@ public class PhysicsEngine {
 //		Vector2D separatingVector = PhysHelper.calculateMinimumSeparatingVector(body, target);
 //		Vector2D collisionNormal = separatingVector.normalize();
 		
-		Vector2D prevPos = body.getPosition();
-		
 		body.setPosition(body.getPosition().add(separatingVector));
-		
-		if (SeparatingAxisTest.getSeparatingAxis(body, target) == null) {
-			System.out.println("[resolveCollision] ERROR HERE!");
-			System.out.println("Previous Position:" + prevPos);
-			System.out.println("Current Position: " + body.getPosition());
-			System.out.println("Target Position: " + target.getPosition());
-			System.out.println("Separating Vector: " + separatingVector);
-		}
 		
 		float impulseMagnitude = PhysHelper.calculateImpulseMagnitude(body, target, collisionNormal);
 		Vector2D impulseVector = collisionNormal.mult(impulseMagnitude);

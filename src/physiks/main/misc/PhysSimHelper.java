@@ -9,6 +9,8 @@ import physiks.geometry.Vector2D;
 import physiks.main.PhysiKsSim;
 
 public abstract class PhysSimHelper {
+	private static int SPAWN_SIZE = 40;
+	
 	public static PolyBody createDiamond(float x, float y, float width, float height, float mass) {
 		List<Vector2D> points = new ArrayList<Vector2D>();
 		
@@ -54,8 +56,8 @@ public abstract class PhysSimHelper {
 	}
 	
 	public static RigidBody spawnDiamond(int x, int y, float mass) {
-		float width = 20;
-		float height = 20;
+		float width = SPAWN_SIZE;
+		float height = SPAWN_SIZE;
 		
 		return createDiamond(x, PhysiKsSim.HEIGHT - y, width, height, mass);
 	}
@@ -64,14 +66,14 @@ public abstract class PhysSimHelper {
 		int xSpread = 200;
 		int ySpread = 200;
 		
-		float width = 20;
-		float height = 20;
+		float width = SPAWN_SIZE;
+		float height = SPAWN_SIZE;
 		
 		RigidBody body;
 		
 		List<RigidBody> newEntities = new ArrayList<RigidBody>();
 		
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 5; i++) {
 			float xPos = (float)Math.random() * xSpread + x - (xSpread / 2);
 			float yPos = (float)Math.random() * ySpread + (PhysiKsSim.HEIGHT - y) - (ySpread / 2);
 			

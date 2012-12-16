@@ -3,6 +3,7 @@ package physiks.visual;
 import java.util.List;
 
 import org.newdawn.slick.Color;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.ShapeRenderer;
@@ -17,7 +18,11 @@ public class RenderEngine {
 	private List<RigidBody> entities;
 	
 	public RenderEngine(List<RigidBody> rigidBodies) {
-//		backgroundColor = new Color(187, 234, 239);
+		this.entities = rigidBodies;
+		initBackground();
+	}
+	
+	private void initBackground() {
 		backgroundColor = new Color(0, 0, 0);
 		background = new Polygon();
 		
@@ -26,8 +31,15 @@ public class RenderEngine {
 		background.addPoint(PhysiKsSim.WIDTH, PhysiKsSim.HEIGHT);
 		background.addPoint(0, PhysiKsSim.HEIGHT);
 		background.setClosed(true);
-		
-		this.entities = rigidBodies;
+	}
+
+	public void update(Graphics graphics) {
+		graphics.setColor(backgroundColor);
+		ShapeRenderer.fill(background);
+
+		for (RigidBody body : entities) {
+			drawBody(body, graphics);
+		}
 	}
 	
 	private void drawBody(RigidBody b, Graphics graphics) {
@@ -44,16 +56,5 @@ public class RenderEngine {
 		
 		graphics.setColor(visualData.getColor());
 		graphics.draw(sprite);
-	}
-	
-	public void update(Graphics graphics) {
-		graphics.setColor(backgroundColor);
-		ShapeRenderer.fill(background);
-
-		for (RigidBody body : entities) {
-			drawBody(body, graphics);
-		}
-		graphics.setColor(backgroundColor);
-		graphics.draw(background);
 	}
 }
