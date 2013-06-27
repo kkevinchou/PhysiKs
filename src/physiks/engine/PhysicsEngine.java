@@ -95,17 +95,17 @@ public class PhysicsEngine {
 		Vector2D velocity = body.getVelocity();
 		Vector2D acceleration = body.getAcceleration();
 		
-		body.setPosition(position.add(velocity.mult(delta)));
-		body.setVelocity(velocity.add(acceleration.mult(delta)));
-		
 		body.clearForces();
 		if (body.getMass() != Float.POSITIVE_INFINITY) {
 			body.addForce(new Gravity(body));
 		}
-
 		Vector2D netForce = body.calculateNetForce();
 		Vector2D newAcceleration = netForce.div(body.getMass());
 		body.setAcceleration(newAcceleration);
+		
+		body.setVelocity(velocity.add(acceleration.mult(delta)));
+		
+		body.setPosition(position.add(velocity.mult(delta)));
 	}
 	
 	private boolean collidesWidth(RigidBody a, RigidBody b) {
