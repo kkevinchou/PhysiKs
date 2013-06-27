@@ -141,7 +141,7 @@ public class PhysiKsSim extends BasicGame {
 				mouseoverText += "[" + body.getId() + "] - " + "Velocity: " + body.getVelocity() + "\n";
 			}
 		}
-		font.get().drawString(0, 0, mouseoverText);
+//		font.get().drawString(0, 0, mouseoverText);
 	}
 	
 	private void spawn(int x, int y, boolean LeftButton) {

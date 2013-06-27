@@ -12,5 +12,5 @@
 * Basic constraints such as springs
 
 ## Pics! Or it didn't happen...
-![pic1](https://github.com/kkevinchou/PhysiKs/raw/master/pics/pic1.png)
-![pic2](https://github.com/kkevinchou/PhysiKs/raw/master/pics/pic2.png)
+![pic1](https://github.com/kkevinchou/PhysiKs_Java/raw/master/pics/pic1.png)
+![pic2](https://github.com/kkevinchou/PhysiKs_Java/raw/master/pics/pic2.png)
